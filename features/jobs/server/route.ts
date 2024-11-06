@@ -26,14 +26,15 @@ import {
   eq,
   or,
   ilike,
-  inArray,
   and,
   desc,
   lte,
   exists,
+  inArray,
 } from "drizzle-orm/expressions";
 import { auth } from "@/auth";
 import { sendMail } from "@/utils/mail";
+import { notifyFollowers } from "@/utils/notify-followers";
 
 const app = new Hono()
   .post(
@@ -438,17 +439,10 @@ const app = new Hono()
       const user = session?.user;
 
       if (!user) {
-        return c.json({
-          success: false,
-          message: "User not found",
-        });
+        return c.json({ success: false, message: "User not found" });
       }
-
       if (user.role === "USER") {
-        return c.json({
-          success: false,
-          message: "User not authorized",
-        });
+        return c.json({ success: false, message: "User not authorized" });
       }
 
       const {
@@ -464,12 +458,51 @@ const app = new Hono()
         skillIds,
       } = c.req.valid("json");
 
-      const skills = skillIds
+      const allSkills = skillIds
         .split(",")
-        .map((skill) => skill.trim())
-        .filter((skill) => skill);
+        .map((s) => s.trim())
+        .filter(Boolean);
 
-      const data = await db
+      const requiredEntities = [
+        { entity: company, id: companyId, message: "Company does not exist" },
+        { entity: jobTypes, id: jobTypeId, message: "Job type does not exist" },
+        {
+          entity: experienceLevels,
+          id: experienceLevelId,
+          message: "Experience level does not exist",
+        },
+        {
+          entity: jobLocations,
+          id: jobLocationId,
+          message: "Job location does not exist",
+        },
+      ];
+
+      for (const { entity, id, message } of requiredEntities) {
+        const exists = await db
+          .select()
+          .from(entity)
+          .where(eq(entity.id, id))
+          .limit(1);
+        if (!exists.length) {
+          return c.json({ success: false, message });
+        }
+      }
+
+      // Check if all skills exist
+      const existingSkills = await db
+        .select()
+        .from(skills)
+        .where(inArray(skills.id, allSkills));
+      if (existingSkills.length !== allSkills.length) {
+        return c.json({
+          success: false,
+          message: "One or more skills does not exist",
+        });
+      }
+
+      // Insert job data
+      const [job] = await db
         .insert(jobs)
         .values({
           companyId,
@@ -486,25 +519,16 @@ const app = new Hono()
         })
         .returning();
 
-      const jobId = data[0].id;
+      await db
+        .insert(jobSkills)
+        .values(allSkills.map((skillId) => ({ jobId: job.id, skillId })));
 
-      const jobSkillData = skills.map((skillId) => ({
-        jobId,
-        skillId,
-      }));
+      await notifyFollowers(companyId, title, description);
 
-      await db.insert(jobSkills).values(jobSkillData);
-
-      return c.json({
-        success: true,
-        message: "Job posted successfully",
-      });
+      return c.json({ success: true, message: "Job posted successfully" });
     } catch (error) {
-      console.log(error);
-      return c.json({
-        success: false,
-        message: "Failed to create job",
-      });
+      console.error(error);
+      return c.json({ success: false, message: "Failed to create job" });
     }
   })
   .get("/companies", async (c) => {
@@ -740,6 +764,116 @@ const app = new Hono()
         success: false,
         message: "Failed to fetch job",
         job: null,
+      });
+    }
+  })
+  .get("/companies/byUser", async (c) => {
+    try {
+      const session = await auth();
+      const user = session?.user;
+
+      if (!user) {
+        return c.json({
+          success: false,
+          message: "User not found",
+          companies: [],
+        });
+      }
+
+      const data = await db
+        .select()
+        .from(company)
+        .where(eq(company.createdBy, user.id as string));
+
+      return c.json({
+        success: true,
+        message: "Companies fetched successfully",
+        companies: data,
+      });
+    } catch (error) {
+      console.log(error);
+      return c.json({
+        success: false,
+        message: "Failed to fetch companies",
+        companies: [],
+      });
+    }
+  })
+  .patch("/apply/:id", async (c) => {
+    try {
+      const session = await auth();
+      const user = session?.user;
+
+      if (!user) {
+        return c.json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      const { id } = c.req.param();
+
+      const [job] = await db
+        .select()
+        .from(jobs)
+        .where(eq(jobs.id, id))
+        .limit(1);
+
+      if (!job) {
+        return c.json({
+          success: false,
+          message: "Job not found",
+        });
+      }
+
+      const userId = user.id as string;
+
+      if (job.postedBy === userId) {
+        return c.json({
+          success: false,
+          message: "You cannot apply for your own job",
+        });
+      }
+
+      if (job.status === "CLOSED") {
+        return c.json({
+          success: false,
+          message: "Job is closed",
+        });
+      }
+
+      if (job.deadline < new Date()) {
+        return c.json({
+          success: false,
+          message: "Job deadline has passed",
+        });
+      }
+
+      const applicants = job.applicants || [];
+
+      if (applicants.includes(userId)) {
+        return c.json({
+          success: false,
+          message: "You have already applied for this job",
+        });
+      }
+
+      await db
+        .update(jobs)
+        .set({
+          applicants: [...applicants, userId],
+        })
+        .where(eq(jobs.id, id));
+
+      return c.json({
+        success: true,
+        message: "Applied for job successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return c.json({
+        success: false,
+        message: "Failed to apply for job",
       });
     }
   });

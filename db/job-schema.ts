@@ -77,6 +77,7 @@ export const company = pgTable("company", {
   email: text("email"),
   phone: text("phone"),
   address: text("address"),
+  followers: text("followers").array().default([]),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   createdBy: text("createdBy")
@@ -140,6 +141,7 @@ export const jobs = pgTable("jobs", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   salary: integer("salary").notNull(),
+  applicants: text("applicants").array().default([]),
   currencyType: text({ enum: ["USD", "EUR", "GBP", "NGN", "INR"] }).$default(
     () => "USD"
   ),

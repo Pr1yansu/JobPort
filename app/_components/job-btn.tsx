@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bookmark } from "lucide-react";
 import { useBookmark } from "@/hooks/use-bookmark";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { formatDate, formatMoney } from "@/utils/date-money";
 
 interface JobButtonProps {
   handleBookmarkClick: (
@@ -19,8 +19,10 @@ interface JobButtonProps {
     location: string;
     type: string;
     image?: string;
-    description?: string;
+    deadline?: string;
     status?: "OPEN" | "CLOSED" | null;
+    salary?: number;
+    currencyType?: "USD" | "EUR" | "GBP" | "NGN" | "INR" | null;
   };
 }
 
@@ -31,7 +33,6 @@ const JobButton = ({
   selected,
 }: JobButtonProps) => {
   const { bookmarks } = useBookmark();
-  console.log(job.description);
 
   return (
     <div
@@ -70,16 +71,31 @@ const JobButton = ({
         <h4 className="text-sm font-semibold group-hover:text-primary transition-all duration-300 gap-4 flex items-center">
           {job.title}
         </h4>
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-xs capitalize">
           {job.company} - {job.location}
         </p>
+        <div className="flex gap-2 items-center">
+          <p
+            className={cn(
+              "text-xs",
+              job.status === "OPEN" ? "text-primary" : "text-destructive"
+            )}
+          >
+            {formatDate(job.deadline)}
+          </p>
+          <span
+            className={cn(
+              "text-xs font-semibold",
+              job.status === "OPEN" ? "text-primary" : "text-destructive"
+            )}
+          >
+            {formatMoney(job.salary, job.currencyType)}/mos
+          </span>
+        </div>
       </div>
-      <div className="absolute right-2 top-2 flex gap-2 items-center">
-        <Badge variant={job.status === "OPEN" ? "success" : "destructive"}>
-          {job.status}
-        </Badge>
+      <div className="absolute right-2 top-2">
         <Bookmark
-          className={cn("", {
+          className={cn("bg-slate-100", {
             "fill-primary": bookmarks.some(
               (bookmark) => bookmark.id === job.id
             ),

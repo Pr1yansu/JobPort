@@ -16,14 +16,12 @@ import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/schema/auth";
 import Link from "next/link";
 import { useLogin } from "@/features/auth/api/use-login";
-import { useEffect } from "react";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { DEFAULT_ROUTE } from "@/routes";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { mutate, isPending, data } = useLogin();
+  const { mutate, isPending } = useLogin();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -33,19 +31,12 @@ export default function LoginForm() {
   });
 
   function onSubmit(values: z.infer<typeof loginSchema>) {
-    mutate(values);
-  }
-
-  useEffect(() => {
-    if (data) {
-      if (data.success) {
-        toast.success(data.message);
+    mutate(values, {
+      onSuccess: () => {
         router.push(DEFAULT_ROUTE);
-      } else {
-        toast.error(data.message);
-      }
-    }
-  }, [data]);
+      },
+    });
+  }
 
   return (
     <Form {...form}>

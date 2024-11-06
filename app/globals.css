@@ -8,21 +8,39 @@ body {
 }
 
 
-#rich-text-editor ul,
-#rich-text-editor ol,
-.rich-text ul,
-.rich-text ol {
-  @layer base {
-    ul {
-      list-style-type: disc;
-      padding-left: 1.5rem;
-    }
+@layer base {
 
-    ol {
-      list-style-type: decimal;
-      padding-left: 1.5rem;
-    }
+  #rich-text-editor ul,
+  #rich-text-editor ol,
+  .rich-text ul,
+  .rich-text ol {
+    list-style-type: revert;
+    @apply text-sm pl-5 text-zinc-800;
   }
+}
+
+
+@media print {
+  .no-print {
+    display: none;
+  }
+
+  .resume-background {
+    padding: 0%;
+    margin: 0%;
+  }
+
+  #main-resume {
+    display: block;
+    height: 100% !important;
+    width: 100% !important;
+    box-shadow: none;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 0;
 }
 
 ::-webkit-scrollbar {

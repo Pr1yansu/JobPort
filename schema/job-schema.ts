@@ -23,13 +23,51 @@ export const jobSchema = z.object({
 });
 
 export const companySchema = z.object({
-  name: z.string().min(2, {}),
-  description: z.string().min(2, {}).optional().nullable(),
-  website: z.string().url().optional().nullable(),
-  email: z.string().email().optional().nullable(),
-  phone: z.string().optional().nullable(),
-  address: z.string().optional().nullable(),
-  logoUrl: z.string().url().optional().nullable(),
+  name: z.string().min(2, {
+    message: "Company name must be at least 2 characters",
+  }),
+  description: z
+    .string()
+    .min(2, {
+      message: "Company description must be at least 2 characters",
+    })
+    .optional()
+    .nullable(),
+  website: z
+    .string()
+    .url({
+      message: "Invalid website URL",
+    })
+    .optional()
+    .nullable(),
+  email: z
+    .string()
+    .email({
+      message: "Invalid email address",
+    })
+    .optional()
+    .nullable(),
+  phone: z
+    .string()
+    .regex(/^\d{11}$/, {
+      message: "Invalid phone number",
+    })
+    .optional()
+    .nullable(),
+  address: z
+    .string()
+    .min(2, {
+      message: "Company address must be at least 2 characters",
+    })
+    .optional()
+    .nullable(),
+  logoUrl: z
+    .string()
+    .url({
+      message: "Invalid logo URL",
+    })
+    .optional()
+    .nullable(),
 });
 
 export const jobTypeSchema = z.object({

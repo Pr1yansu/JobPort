@@ -5,6 +5,7 @@ import QueryProvider from "@/components/query-provider";
 import { Toaster } from "sonner";
 import InboxModal from "./_components/_modals/inbox-modal";
 import { SessionProvider } from "next-auth/react";
+import ConvexProviderClient from "@/providers/convex-provider";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
@@ -24,15 +25,17 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} $ antialiased`}>
-        <SessionProvider>
-          <QueryProvider>
-            <>
-              {children}
-              <Toaster />
-              <InboxModal />
-            </>
-          </QueryProvider>
-        </SessionProvider>
+        <ConvexProviderClient>
+          <SessionProvider>
+            <QueryProvider>
+              <>
+                {children}
+                <Toaster />
+                <InboxModal />
+              </>
+            </QueryProvider>
+          </SessionProvider>
+        </ConvexProviderClient>
       </body>
     </html>
   );

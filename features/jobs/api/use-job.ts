@@ -34,6 +34,12 @@ type getJobResponseType = InferResponseType<
 type getJobDetailsResponseType = InferResponseType<
   (typeof client.api.data.jobs)[":id"]["$get"]
 >;
+type ApplyJobResponseType = InferResponseType<
+  (typeof client.api.data.jobs.apply)[":id"]["$patch"]
+>;
+type ApplyJobRequestType = InferRequestType<
+  (typeof client.api.data.jobs.apply)[":id"]["$patch"]
+>["param"];
 
 export const useAddJob = () => {
   const queryClient = useQueryClient();
@@ -180,4 +186,38 @@ export const useGetJobDetails = (id: string) => {
   });
 
   return query;
+};
+
+export const useApplyJob = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation<
+    ApplyJobResponseType,
+    Error,
+    ApplyJobRequestType
+  >({
+    mutationFn: async (param) => {
+      const response = await client.api.data.jobs.apply[":id"]["$patch"]({
+        param,
+      });
+      return await response.json();
+    },
+    onSuccess: ({ message, success }) => {
+      if (success) {
+        toast.success(message);
+        queryClient.invalidateQueries({
+          queryKey: ["jobs"],
+        });
+      } else {
+        toast.error(message);
+      }
+    },
+    onError: (error) => {
+      if (error instanceof ZodError) {
+        return toast.error(error.errors[0].message);
+      }
+      toast.error(error.message);
+    },
+  });
+
+  return mutation;
 };

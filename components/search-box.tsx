@@ -31,6 +31,7 @@ const SearchBox = ({
 
   return (
     <Input
+      className="flex-1 w-full"
       placeholder={placeholder}
       value={input}
       onChange={(e) => setInput(e.target.value)}

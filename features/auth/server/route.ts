@@ -87,6 +87,12 @@ const app = new Hono()
       password: hashedPassword,
     });
 
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
     return c.json({
       success: true,
       message: "User registered successfully",

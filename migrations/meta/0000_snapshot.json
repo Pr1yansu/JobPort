@@ -1,5 +1,5 @@
 {
-  "id": "097cf3c6-6b65-4c83-abd5-63fcb02a7887",
+  "id": "6221ad5c-559d-4a87-949e-d2d9a72ec2cd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -112,6 +112,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "followers": {
+          "name": "followers",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'"
         },
         "createdAt": {
           "name": "createdAt",
@@ -477,6 +484,13 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "applicants": {
+          "name": "applicants",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'"
         },
         "currencyType": {
           "name": "currencyType",

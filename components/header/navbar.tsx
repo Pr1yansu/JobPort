@@ -1,10 +1,12 @@
 import React from "react";
 import { auth } from "@/auth";
-import SearchBox from "@/components/search-box";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Bell, BellDot } from "lucide-react";
 import Link from "next/link";
+import SearchVariantBox from "./search-variant-box";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const Navbar = async () => {
   const notifications = 0;
@@ -12,8 +14,9 @@ const Navbar = async () => {
   const user = session?.user;
   return (
     <div className="flex items-center justify-between w-full">
-      <div className="max-w-sm w-full">
-        <SearchBox placeholder="🔍 Search jon title or skill" />
+      <div className="max-w-sm w-full flex gap-2 items-center">
+        <SidebarTrigger className="no-print" />
+        <SearchVariantBox />
       </div>
       <div className="flex gap-2 items-center">
         <Link href="/dashboard/notifications">

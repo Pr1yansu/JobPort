@@ -14,12 +14,27 @@ type AddCompanyRequestType = InferRequestType<
 type getCompaniesResponseType = InferResponseType<
   (typeof client.api.data.jobs.companies)["$get"]
 >;
+type getCompaniesByAuthenticatedUserResponseType = InferResponseType<
+  (typeof client.api.data.jobs.companies.byUser)["$get"]
+>;
 
 export const useGetCompanies = () => {
   const query = useQuery<getCompaniesResponseType, Error>({
     queryKey: ["companies"],
     queryFn: async () => {
       const response = await client.api.data.jobs.companies["$get"]();
+      return await response.json();
+    },
+  });
+
+  return query;
+};
+
+export const useGetCompaniesByAuthenticatedUser = () => {
+  const query = useQuery<getCompaniesByAuthenticatedUserResponseType, Error>({
+    queryKey: ["companies"],
+    queryFn: async () => {
+      const response = await client.api.data.jobs.companies.byUser["$get"]();
       return await response.json();
     },
   });

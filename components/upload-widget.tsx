@@ -1,14 +1,14 @@
 import { CldUploadWidget } from "next-cloudinary";
-
 import React from "react";
-import { Button } from "@/components/ui/button";
 
 const UploadWidget = ({
   children,
   onUpload,
+  className,
 }: {
   children: React.ReactNode;
   onUpload: (url: string) => void;
+  className?: string;
 }) => {
   return (
     <CldUploadWidget
@@ -20,7 +20,11 @@ const UploadWidget = ({
       }}
     >
       {({ open }) => {
-        return <div onClick={() => open()}>{children}</div>;
+        return (
+          <div onClick={() => open()} className={className}>
+            {children}
+          </div>
+        );
       }}
     </CldUploadWidget>
   );

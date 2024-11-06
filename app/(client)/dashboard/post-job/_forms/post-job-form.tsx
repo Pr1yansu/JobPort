@@ -44,7 +44,7 @@ import {
   useAddExperienceLevel,
   useGetExperienceLevels,
 } from "@/features/jobs/api/use-experience-level";
-import { Loader2 } from "lucide-react";
+import { Loader2, SendHorizonalIcon } from "lucide-react";
 import { useAddSkill, useGetSkills } from "@/features/jobs/api/use-skills";
 import RichTextEditor from "@/components/rich-text-editor";
 
@@ -95,7 +95,11 @@ const PostJobForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof jobSchema>) {
-    addJob(values);
+    addJob(values, {
+      onSuccess: async () => {
+        await form.reset();
+      },
+    });
   }
 
   const companiesOptions = React.useMemo(() => {
@@ -217,8 +221,6 @@ const PostJobForm = () => {
                       <RichTextEditor
                         value={field.value}
                         onChange={(value) => {
-                          console.log(value);
-
                           field.onChange(value);
                         }}
                       />
@@ -427,8 +429,8 @@ const PostJobForm = () => {
                 )}
               />
 
-              <Button type="submit" className="w-full">
-                Submit Job Posting
+              <Button type="submit" className="w-full" disabled={isJobPending}>
+                Post this job <SendHorizonalIcon className="w-6 h-6 ml-2" />
               </Button>
             </form>
           </Form>

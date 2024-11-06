@@ -52,6 +52,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "convex": "^1.16.6",
+    "convex-helpers": "^0.1.63",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.5",
@@ -60,6 +61,7 @@
     "framer-motion": "^11.11.10",
     "hono": "^4.6.5",
     "input-otp": "^1.2.4",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "next-auth": "^5.0.0-beta.22",
@@ -74,6 +76,7 @@
     "react-icons": "^5.3.0",
     "react-resizable-panels": "^2.1.4",
     "react-select": "^5.8.2",
+    "react-to-pdf": "^1.0.1",
     "recharts": "^2.13.0",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.4",
@@ -83,6 +86,7 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.13",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.16",
     "@types/react": "^18",

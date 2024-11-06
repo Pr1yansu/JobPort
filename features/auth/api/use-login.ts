@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
+import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
@@ -15,6 +16,16 @@ export const useLogin = () => {
     mutationFn: async (json) => {
       const response = await client.api.data.users.login["$post"]({ json });
       return await response.json();
+    },
+    onSuccess: ({ message, success }) => {
+      if (success) {
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    },
+    onError: () => {
+      toast.error("Failed to login");
     },
   });
 

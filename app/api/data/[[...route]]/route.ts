@@ -3,12 +3,16 @@ import { handle } from "hono/vercel";
 
 import authRoute from "@/features/auth/server/route";
 import jobRoute from "@/features/jobs/server/route";
+import companyRoute from "@/features/companies/server/route";
+import usersRoute from "@/features/users/server/route";
 
 const app = new Hono().basePath("/api");
 
 const routes = app
   .route("/data/users", authRoute)
-  .route("/data/jobs", jobRoute);
+  .route("/data/jobs", jobRoute)
+  .route("/data/companies", companyRoute)
+  .route("/data/users", usersRoute);
 
 app.notFound((c) => c.text("Not Found", 404));
 app.onError((err, c) => {

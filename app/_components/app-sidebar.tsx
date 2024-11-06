@@ -10,8 +10,10 @@ import { auth } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   BriefcaseBusiness,
+  Building2,
   CalendarCheck2,
   CircleFadingPlus,
+  FileUser,
   LayoutDashboard,
   LogOut,
   Settings,
@@ -23,6 +25,8 @@ import Link from "next/link";
 import InviteFriends from "./invite-friends";
 import LogoutBtn from "@/components/ui/logout-btn";
 import ApplyAsRecruiter from "./apply-as-recruiter";
+
+export const revalidate = 60;
 
 export async function AppSidebar() {
   const session = await auth();
@@ -39,6 +43,11 @@ export async function AppSidebar() {
       title: "Jobs",
       url: "/dashboard/jobs",
       icon: BriefcaseBusiness,
+    },
+    {
+      title: "Resume",
+      url: "/dashboard/resume",
+      icon: FileUser,
     },
     {
       title: "Profile",
@@ -74,12 +83,17 @@ export async function AppSidebar() {
         url: "/dashboard/posted-jobs",
         icon: CalendarCheck2,
       },
+      {
+        title: "Companies",
+        url: "/dashboard/company",
+        icon: Building2,
+      },
       { title: "Applicants", url: "/dashboard/applicants", icon: UserPen }
     );
   }
 
   return (
-    <Sidebar>
+    <Sidebar className="no-print">
       <SidebarContent className="p-2">
         <SidebarHeader>
           <div className="flex flex-col justify-center items-center">

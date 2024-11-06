@@ -15,11 +15,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { registerSchema } from "@/schema/auth";
 import { useRegister } from "@/features/auth/api/use-register";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { DEFAULT_ROUTE } from "@/routes";
 
 export default function RegisterForm() {
-  const { mutate, isPending, data } = useRegister();
+  const router = useRouter();
+  const { mutate, isPending } = useRegister();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -31,18 +32,12 @@ export default function RegisterForm() {
   });
 
   function onSubmit(values: z.infer<typeof registerSchema>) {
-    mutate(values);
+    mutate(values, {
+      onSuccess: () => {
+        router.push(DEFAULT_ROUTE);
+      },
+    });
   }
-
-  useEffect(() => {
-    if (data) {
-      if (data.success) {
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    }
-  }, [data]);
 
   return (
     <Form {...form}>

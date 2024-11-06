@@ -127,11 +127,13 @@ const JobSection = () => {
                 id: job.id,
                 image: job.company.logoUrl || undefined,
                 title: job.title,
-                description: job.description,
+                deadline: job.deadline,
                 status: job.status,
                 company: job.company.name,
                 location: job.jobLocation.label,
                 type: job.jobType.label,
+                currencyType: job.currencyType,
+                salary: job.salary,
               }}
             />
           </motion.div>

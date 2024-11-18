@@ -1,3 +1,4 @@
+"use client";
 import { CldUploadWidget } from "next-cloudinary";
 import React from "react";
 
@@ -21,7 +22,13 @@ const UploadWidget = ({
     >
       {({ open }) => {
         return (
-          <div onClick={() => open()} className={className}>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              open();
+            }}
+            className={className}
+          >
             {children}
           </div>
         );

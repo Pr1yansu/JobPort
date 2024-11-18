@@ -42,12 +42,15 @@ export function DatePicker({ onChange, value, disabled }: DatePickerProps) {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
+          captionLayout="dropdown"
           selected={value ? new Date(value) : new Date()}
           onSelect={(date) => {
             if (!date) return;
             onChange(format(date, "yyyy-MM-dd"));
           }}
           initialFocus
+          fromYear={new Date().getFullYear() - 100}
+          toYear={new Date().getFullYear() + 100}
           disabled={disabled}
         />
       </PopoverContent>

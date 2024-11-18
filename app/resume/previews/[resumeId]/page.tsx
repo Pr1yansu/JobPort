@@ -7,11 +7,13 @@ import { useQuery } from "convex/react";
 import { useParams } from "next/navigation";
 import React from "react";
 import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const ResumePreviewShare = () => {
+  const { data: session } = useSession();
   const params = useParams();
   const resume = useQuery(api.resume.getResume, {
-    collaboratorId: "",
+    collaboratorId: session?.user.id || "",
     id: params.resumeId as Id<"resumes">,
   });
 
@@ -23,7 +25,7 @@ const ResumePreviewShare = () => {
     );
   }
 
-  if (!resume) {
+  if (!resume || !session?.user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
         <div className="max-w-md w-full bg-white shadow-lg rounded-lg overflow-hidden">

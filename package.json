@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx convex deploy --cmd 'npm run build'",
     "start": "next start",
     "lint": "next lint",
     "generate:migration": "drizzle-kit generate",
@@ -70,6 +70,7 @@
     "nodemailer": "^6.9.15",
     "postgres": "^3.4.4",
     "react": "^18",
+    "react-colorful": "^5.6.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",

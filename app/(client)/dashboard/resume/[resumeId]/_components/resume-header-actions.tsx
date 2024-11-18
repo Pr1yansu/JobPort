@@ -114,7 +114,7 @@ const Actions = ({ resume }: { resume: any }) => {
             className="w-full"
             onClick={() => {
               navigator.clipboard.writeText(
-                `${process.env.NEXT_PUBLIC_API_URL}/resume/previews/${resume._id}`
+                `${process.env.NEXT_PUBLIC_API_URL}/dashboard/resume/${resume._id}`
               );
               toast.success("Link copied to clipboard to share with others");
             }}

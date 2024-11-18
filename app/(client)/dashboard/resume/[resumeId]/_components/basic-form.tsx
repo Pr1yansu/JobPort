@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { debounce } from "lodash";
+import { Doc } from "@/convex/_generated/dataModel";
 
 const BasicFormSchema = z.object({
   title: z.string(),
@@ -29,7 +30,7 @@ const BasicFormSchema = z.object({
 });
 
 interface BasicFormProps {
-  resume: any;
+  resume: Doc<"resumes">;
   currentWidth: number;
 }
 

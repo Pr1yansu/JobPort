@@ -49,7 +49,7 @@ const NewResumeForm = () => {
     defaultValues: {
       title: "",
       fullName: session?.user.name ?? "",
-      contactEmail: "",
+      contactEmail: session?.user.email ?? "",
       phone: "",
       address: "",
     },
@@ -91,7 +91,7 @@ const NewResumeForm = () => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Product Manager..." />
                 </FormControl>
 
                 <FormMessage />
@@ -121,7 +121,10 @@ const NewResumeForm = () => {
               <FormItem>
                 <FormLabel>Address</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input
+                    {...field}
+                    placeholder="1234 Elm Street, Springfield, IL 62701"
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -135,7 +138,7 @@ const NewResumeForm = () => {
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="(555) 555-5555" />
                 </FormControl>
 
                 <FormMessage />

@@ -43,6 +43,10 @@ body {
   margin: 0;
 }
 
+.rdp-vhidden {
+  @apply hidden;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

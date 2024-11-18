@@ -21,6 +21,9 @@ const ResumeEditor = ({ resumeId }: { resumeId: Id<"resumes"> }) => {
       id: resumeId,
     }
   );
+  const sections = useQuery(api.resumeSections.getSections, {
+    resumeId: resumeData?._id,
+  });
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -66,8 +69,16 @@ const ResumeEditor = ({ resumeId }: { resumeId: Id<"resumes"> }) => {
 
   return (
     <div className="flex">
-      <ResumeBuilder currentWidth={currentWidth} resume={resumeData} />
-      <ResumePreview resume={resumeData} currentWidth={currentWidth} />
+      <ResumeBuilder
+        currentWidth={currentWidth}
+        resume={resumeData}
+        sections={sections}
+      />
+      <ResumePreview
+        resume={resumeData}
+        currentWidth={currentWidth}
+        sections={sections}
+      />
     </div>
   );
 };

@@ -16,6 +16,9 @@ const ResumePreviewShare = () => {
     collaboratorId: session?.user.id || "",
     id: params.resumeId as Id<"resumes">,
   });
+  const sections = useQuery(api.resumeSections.getSections, {
+    resumeId: params.resumeId as Id<"resumes">,
+  });
 
   if (resume === undefined) {
     return (
@@ -52,7 +55,7 @@ const ResumePreviewShare = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="p-6">
-        <MainResume resume={resume} />
+        <MainResume resume={resume} sections={sections} />
       </div>
     </div>
   );

@@ -160,7 +160,21 @@ const MainResume = ({ resume, sections }: Props) => {
                     color: secondaryColor,
                   }}
                 >
-                  {section.content.title}
+                  <h4>{section.content.title}</h4>
+                  <div className="flex gap-2 flex-wrap flex-col">
+                    {section.content.items.map((item, key) => (
+                      <div key={key} className="flex gap-1 flex-wrap flex-col">
+                        {Object.keys(item).map((key) => (
+                          <div key={key} className="flex gap-2 items-center">
+                            <h5 className="font-semibold capitalize">
+                              {key}:{" "}
+                            </h5>
+                            <p>{item[key]}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

@@ -128,7 +128,7 @@ const JobDetails = ({ id }: JobDetailsProps) => {
         <Button
           size="sm"
           variant={job?.status === "OPEN" ? "default" : "outline"}
-          disabled={job?.status !== "OPEN"}
+          disabled={job?.status !== "OPEN" || job?.applicants?.includes(userId)}
           onClick={() => {
             if (job?.applicants?.includes(userId)) return;
             mutate(

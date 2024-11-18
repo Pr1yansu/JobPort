@@ -78,12 +78,27 @@ export const updateSection = mutation({
   handler: async (ctx, args) => {
     const { db } = ctx;
 
+    // Filter items: Remove empty objects and objects with empty string values
+    args.content.items = args.content.items.filter((item) => {
+      // Check if item is an object and not empty
+      if (
+        typeof item === "object" &&
+        item !== null &&
+        Object.keys(item).length > 0
+      ) {
+        // Ensure no properties have empty string values
+        return Object.values(item).some((value) =>
+          typeof value === "string" ? value.trim() !== "" : true
+        );
+      }
+      return false; // Exclude empty objects or invalid types
+    });
+
+    // Update the section in the database
     await db.patch(args._id, {
-      type: args.type,
-      content: args.content,
-      isVisible: args.isVisible,
-      sectionStyles: args.sectionStyles,
-      updatedAt: Date.now(),
+      ...args, // Spread args to map fields directly
+      content: args.content, // Include filtered content
+      updatedAt: Date.now(), // Add updatedAt field
     });
 
     return args._id;

@@ -205,7 +205,7 @@ export const useApplyJob = () => {
       if (success) {
         toast.success(message);
         queryClient.invalidateQueries({
-          queryKey: ["jobs"],
+          queryKey: ["jobDetails"],
         });
       } else {
         toast.error(message);

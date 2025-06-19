@@ -63,6 +63,9 @@ const JobDetails = ({ id }: JobDetailsProps) => {
 
   if (!userId) return;
 
+  const allApplicantsIds =
+    job?.applicants?.map((applicant) => applicant.user?.id) ?? [];
+
   return (
     <div
       className={cn(
@@ -128,9 +131,9 @@ const JobDetails = ({ id }: JobDetailsProps) => {
         <Button
           size="sm"
           variant={job?.status === "OPEN" ? "default" : "outline"}
-          disabled={job?.status !== "OPEN" || job?.applicants?.includes(userId)}
+          disabled={job?.status !== "OPEN" || allApplicantsIds.includes(userId)}
           onClick={() => {
-            if (job?.applicants?.includes(userId)) return;
+            if (allApplicantsIds.includes(userId)) return;
             mutate(
               {
                 id: job?.id || "",
@@ -143,7 +146,7 @@ const JobDetails = ({ id }: JobDetailsProps) => {
             );
           }}
         >
-          {job?.applicants?.includes(userId) ? "Applied" : "Apply"}
+          {allApplicantsIds.includes(userId) ? "Applied" : "Apply"}
         </Button>
         <Button
           size="sm"

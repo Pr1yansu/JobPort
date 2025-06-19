@@ -10,6 +10,7 @@ import {
   skills,
   jobs,
   jobSkills,
+  applicants,
 } from "@/db/job-schema";
 import {
   appliedAsRecruiterSchema,
@@ -750,6 +751,11 @@ const app = new Hono()
               skill: true,
             },
           },
+          applicants: {
+            with: {
+              user: true,
+            },
+          },
         },
       });
 
@@ -805,13 +811,11 @@ const app = new Hono()
       const user = session?.user;
 
       if (!user) {
-        return c.json({
-          success: false,
-          message: "User not found",
-        });
+        return c.json({ success: false, message: "User not found" });
       }
 
       const { id } = c.req.param();
+      const userId = user.id as string;
 
       const [job] = await db
         .select()
@@ -820,13 +824,8 @@ const app = new Hono()
         .limit(1);
 
       if (!job) {
-        return c.json({
-          success: false,
-          message: "Job not found",
-        });
+        return c.json({ success: false, message: "Job not found" });
       }
-
-      const userId = user.id as string;
 
       if (job.postedBy === userId) {
         return c.json({
@@ -836,45 +835,131 @@ const app = new Hono()
       }
 
       if (job.status === "CLOSED") {
-        return c.json({
-          success: false,
-          message: "Job is closed",
-        });
+        return c.json({ success: false, message: "Job is closed" });
       }
 
       if (job.deadline < new Date()) {
-        return c.json({
-          success: false,
-          message: "Job deadline has passed",
-        });
+        return c.json({ success: false, message: "Job deadline has passed" });
       }
 
-      const applicants = job.applicants || [];
+      // ✅ Check if already applied directly in `applicants` table
+      const [existing] = await db
+        .select()
+        .from(applicants)
+        .where(and(eq(applicants.userId, userId), eq(applicants.job_id, id)))
+        .limit(1);
 
-      if (applicants.includes(userId)) {
+      if (existing) {
         return c.json({
           success: false,
           message: "You have already applied for this job",
         });
       }
 
-      await db
-        .update(jobs)
-        .set({
-          applicants: [...applicants, userId],
+      const [applicant] = await db
+        .insert(applicants)
+        .values({
+          userId,
+          appliedDate: new Date(),
+          resumeUrl: null,
+          job_id: id,
         })
-        .where(eq(jobs.id, id));
+        .returning();
+
+      if (!applicant) {
+        return c.json({
+          success: false,
+          message: "Failed to create applicant",
+        });
+      }
 
       return c.json({
         success: true,
         message: "Applied for job successfully",
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return c.json({
         success: false,
         message: "Failed to apply for job",
       });
     }
+  })
+  .get("/get/all/applicants", async (c) => {
+    try {
+      const session = await auth();
+      const user = session?.user;
+
+      if (!user) {
+        return c.json({
+          success: false,
+          message: "User not found",
+          applicants: [],
+        });
+      }
+
+      if (user.role !== "RECRUITER" && user.role !== "ADMIN") {
+        return c.json({
+          success: false,
+          message: "User not authorized",
+          applicants: [],
+        });
+      }
+
+      // Get all applicants for jobs posted by current user
+      const data = await db
+        .select({
+          applicantId: users.id,
+          name: users.name,
+          email: users.email,
+          avatar: users.image,
+          jobTitle: jobs.title,
+          company: company.name,
+          appliedDate: applicants.appliedDate,
+          status: applicants.status,
+          resumeUrl: applicants.resumeUrl,
+        })
+        .from(applicants)
+        .leftJoin(users, eq(applicants.userId, users.id))
+        .leftJoin(jobs, eq(applicants.job_id, jobs.id))
+        .leftJoin(company, eq(jobs.companyId, company.id))
+        .where(eq(jobs.postedBy, user.id as string))
+        .orderBy(desc(applicants.appliedDate));
+
+      // Transform to match frontend format
+      const formatted = data.map((item) => ({
+        id: item.applicantId,
+        name: item.name,
+        email: item.email,
+        avatar: item.avatar ?? "/placeholder.svg",
+        jobTitle: item.jobTitle,
+        company: item.company,
+        appliedDate: item.appliedDate?.toISOString().split("T")[0],
+        status: item.status as
+          | "REJECTED"
+          | "APPLIED"
+          | "INTERVIEWED"
+          | "OFFERED"
+          | null,
+        experience: "N/A",
+        location: "N/A",
+        skills: [],
+        resumeUrl: item.resumeUrl ?? "#",
+      }));
+
+      return c.json({
+        success: true,
+        message: "Applicants fetched successfully",
+        applicants: formatted,
+      });
+    } catch (error) {
+      console.error(error);
+      return c.json({
+        success: false,
+        message: "Failed to fetch applicants",
+        applicants: [],
+      });
+    }
   });
+
 export default app;

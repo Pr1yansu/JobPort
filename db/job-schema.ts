@@ -133,6 +133,21 @@ export const skillRelations = relations(skills, ({ many }) => ({
   jobs: many(jobSkills),
 }));
 
+export const applicants = pgTable("applicants", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
+  status: text({
+    enum: ["APPLIED", "INTERVIEWED", "OFFERED", "REJECTED"],
+  }).$default(() => "APPLIED"),
+  appliedDate: timestamp("appliedDate", { mode: "date" })
+    .defaultNow()
+    .notNull(),
+  resumeUrl: text("resumeUrl"),
+  job_id: text("jobId").references(() => jobs.id, { onDelete: "cascade" }),
+});
+
 // Jobs Table
 export const jobs = pgTable("jobs", {
   id: text("id")
@@ -141,7 +156,6 @@ export const jobs = pgTable("jobs", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   salary: integer("salary").notNull(),
-  applicants: text("applicants").array().default([]),
   currencyType: text({ enum: ["USD", "EUR", "GBP", "NGN", "INR"] }).$default(
     () => "USD"
   ),
@@ -188,6 +202,7 @@ export const jobRelations = relations(jobs, ({ one, many }) => ({
   }),
   postedByUser: one(users, { fields: [jobs.postedBy], references: [users.id] }),
   jobSkills: many(jobSkills),
+  applicants: many(applicants),
 }));
 
 // Applied as Recruiter Table
@@ -213,3 +228,14 @@ export const appliedAsRecruiterRelations = relations(
     }),
   })
 );
+
+export const applicantRelations = relations(applicants, ({ one }) => ({
+  job: one(jobs, {
+    fields: [applicants.job_id],
+    references: [jobs.id],
+  }),
+  user: one(users, {
+    fields: [applicants.userId],
+    references: [users.id],
+  }),
+}));

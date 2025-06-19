@@ -23,6 +23,15 @@ import { Copy, Plus, CloudOff, CloudUpload, Loader2 } from "lucide-react";
 import SearchBox from "@/components/search-box";
 import { useSearchUsers } from "@/features/users/api/use-users";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Account } from "../_components/wallet-accounts";
+import { WalletOptions } from "../_components/wallet-connection-button";
+import { useAccount } from "wagmi";
+
+function ConnectWallet() {
+  const { isConnected } = useAccount();
+  if (isConnected) return <Account />;
+  return <WalletOptions />;
+}
 
 const Actions = ({ resume }: { resume: any }) => {
   const { data: searchedUsers, isLoading: searchedUsersPending } =
@@ -61,6 +70,7 @@ const Actions = ({ resume }: { resume: any }) => {
       >
         Download PDF
       </Button>
+      <ConnectWallet />
       <Popover>
         <PopoverTrigger asChild>
           <Button size={"sm"} variant={"outline"}>

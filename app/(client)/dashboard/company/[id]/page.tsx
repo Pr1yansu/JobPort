@@ -9,7 +9,7 @@ interface Params {
 
 const CompanyDetails = ({ params }: Params) => {
   return (
-    <div>
+    <div className="my-5">
       <CompanyDetail id={params.id} />
     </div>
   );

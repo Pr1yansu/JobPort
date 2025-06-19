@@ -40,6 +40,9 @@ type ApplyJobResponseType = InferResponseType<
 type ApplyJobRequestType = InferRequestType<
   (typeof client.api.data.jobs.apply)[":id"]["$patch"]
 >["param"];
+type getApplicantsResponseType = InferResponseType<
+  (typeof client.api.data.jobs.get.all.applicants)["$get"]
+>;
 
 export const useAddJob = () => {
   const queryClient = useQueryClient();
@@ -220,4 +223,16 @@ export const useApplyJob = () => {
   });
 
   return mutation;
+};
+
+export const useGetApplicants = () => {
+  const query = useQuery<getApplicantsResponseType, Error>({
+    queryKey: ["applicants"],
+    queryFn: async () => {
+      const response = await client.api.data.jobs.get.all.applicants["$get"]();
+      return await response.json();
+    },
+  });
+
+  return query;
 };

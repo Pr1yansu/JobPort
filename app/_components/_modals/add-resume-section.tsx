@@ -237,12 +237,10 @@ const AddResumeSectionModal: React.FC = () => {
               <RenderFields form={form} />
             </div>
             <DialogFooter className="!justify-between">
-              <DialogClose asChild>
-                <Button variant={"destructive"} type="button">
-                  <X className="mr-2" />
-                  Close
-                </Button>
-              </DialogClose>
+              <Button variant={"destructive"} type="button" onClick={close}>
+                <X className="mr-2" />
+                Close
+              </Button>
               <Button type="submit">
                 {section ? "Update Section" : "Add Section"}
                 <Send className="ml-2" />

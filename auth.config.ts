@@ -1,5 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+import Facebook from "next-auth/providers/facebook";
 import Credentials from "next-auth/providers/credentials";
 import { db } from "@/config/db";
 import { users } from "@/db/users-schema";
@@ -9,6 +11,8 @@ import { comparePasswords } from "./lib/password";
 export default {
   providers: [
     GitHub,
+    Google,
+    Facebook,
     Credentials({
       name: "Credentials",
       credentials: {

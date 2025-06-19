@@ -15,7 +15,6 @@ const Register = () => {
           <RegisterForm />
         </AuthCardWrapper>
       </div>
-      <div></div>
     </div>
   );
 };

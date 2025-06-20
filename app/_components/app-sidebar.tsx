@@ -16,7 +16,6 @@ import {
   FileUser,
   LayoutDashboard,
   LogOut,
-  Settings,
   Star,
   User,
   UserPen,
@@ -27,8 +26,8 @@ import InviteFriends from "./invite-friends";
 import LogoutBtn from "@/components/ui/logout-btn";
 import ApplyAsRecruiter from "./apply-as-recruiter";
 import RazorpayButton from "./payment-btn";
-import { Button } from "@/components/ui/button";
 import NonPremiumButton from "./non-premium-button";
+import { FaRobot } from "react-icons/fa6";
 
 export const revalidate = 60;
 
@@ -53,15 +52,16 @@ export async function AppSidebar() {
       url: "/dashboard/resume",
       icon: FileUser,
     },
+
+    {
+      title: "AI Suggestions",
+      url: "/dashboard/suggestions",
+      icon: FaRobot,
+    },
     {
       title: "Profile",
       url: "/dashboard/profile",
       icon: User,
-    },
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: Settings,
     },
   ];
 

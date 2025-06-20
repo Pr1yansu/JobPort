@@ -14,7 +14,7 @@ const routes = app
   .route("/data/jobs", jobRoute)
   .route("/data/companies", companyRoute)
   .route("/data/users", usersRoute)
-  .route("/data/payment",paymentRoute);
+  .route("/data/payment", paymentRoute);
 
 app.notFound((c) => c.text("Not Found", 404));
 app.onError((err, c) => {

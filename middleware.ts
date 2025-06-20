@@ -8,7 +8,6 @@ const { auth } = NextAuth(authConfig);
 export default auth(async function middleware(req) {
   const { pathname, origin } = req.nextUrl;
   const authenticated = !!req.auth;
-  const user = req.auth?.user;
 
   if (pathname.startsWith(API_ROUTES_START)) {
     return NextResponse.next();
@@ -20,10 +19,6 @@ export default auth(async function middleware(req) {
 
   if (authenticated && pathname.startsWith(AUTH_ROUTES_START)) {
     return NextResponse.redirect(new URL(DEFAULT_ROUTE, origin));
-  }
-
-  if (pathname === "/dashboard/resume" && !user?.premium) {
-    return NextResponse.redirect(new URL("/", origin));
   }
 
   return NextResponse.next();

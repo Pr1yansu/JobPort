@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
+  Star,
   User,
   UserPen,
   Users,
@@ -25,6 +26,9 @@ import Link from "next/link";
 import InviteFriends from "./invite-friends";
 import LogoutBtn from "@/components/ui/logout-btn";
 import ApplyAsRecruiter from "./apply-as-recruiter";
+import RazorpayButton from "./payment-btn";
+import { Button } from "@/components/ui/button";
+import NonPremiumButton from "./non-premium-button";
 
 export const revalidate = 60;
 
@@ -116,10 +120,21 @@ export async function AppSidebar() {
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <Link href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
-                </Link>
+                {item.title === "Resume" ? (
+                  user.premium ? (
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  ) : (
+                    <NonPremiumButton feature="Resume Builder" />
+                  )
+                ) : (
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                )}
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
@@ -132,6 +147,13 @@ export async function AppSidebar() {
             </LogoutBtn>
           </SidebarMenuItem>
         </SidebarMenu>
+        {user.premium ? (
+          <span className="text-yellow-400 flex justify-center items-center text-sm font-semibold mt-4 uppercase">
+            Premium User <Star className="inline size-4 ml-1" />
+          </span>
+        ) : (
+          <RazorpayButton amount={100} />
+        )}
         {user.role === "USER" && <ApplyAsRecruiter />}
         <InviteFriends />
       </SidebarContent>

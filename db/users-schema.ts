@@ -21,6 +21,7 @@ export const users = pgTable("user", {
     enum: ["USER", "ADMIN", "RECRUITER"],
   }).$default(() => "USER"),
   isBanned: boolean("isBanned").$default(() => false),
+  premium: boolean("premium").$default(() => false),
 });
 
 // Accounts Table with Cascade Rules

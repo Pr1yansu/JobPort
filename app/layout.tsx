@@ -25,6 +25,10 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="upgrade-insecure-requests"
+        />
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       </head>
       <body className={`${poppins.className} $ antialiased`}>

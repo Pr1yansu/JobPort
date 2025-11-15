@@ -34,3 +34,33 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Database Seeding
+
+Seeding uses Drizzle on PostgreSQL (Neon). It clears all existing data, then inserts demo data for all entities.
+
+Prerequisites:
+- Ensure `DATABASE_URL` is set in `.env`.
+
+Commands (PowerShell):
+
+```powershell
+npm run db:reset
+npm run db:seed
+# or
+npm run db:reseed
+```
+
+Seeds include:
+- Users (Admin, Recruiter, User) with demo credentials
+- Experience Levels, Job Types, Job Locations
+- Skills, Companies (Unsplash Source logos)
+- Jobs, Job-Skills, Applicants
+- Recruiter Applications, Orders
+
+Demo credentials (also available via Drawer on the Login page):
+- Admin: `admin@demo.com` / `demo1234`
+- Recruiter: `recruiter@demo.com` / `demo1234`
+- User: `user@demo.com` / `demo1234`
+
+Images are link-only via Unsplash Source.

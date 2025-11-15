@@ -18,6 +18,16 @@ import Link from "next/link";
 import { useLogin } from "@/features/auth/api/use-login";
 import { useRouter } from "next/navigation";
 import { DEFAULT_ROUTE } from "@/routes";
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerClose,
+} from "@/components/ui/drawer";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -86,6 +96,60 @@ export default function LoginForm() {
           >
             Forgot Password?
           </Link>
+        </div>
+
+        <div className="mt-2">
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="outline" className="w-full" type="button">
+                Use Demo Accounts
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Demo Accounts</DrawerTitle>
+                <DrawerDescription>
+                  Click a role to autofill email and password.
+                </DrawerDescription>
+              </DrawerHeader>
+              <div className="grid gap-2 p-4">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    form.setValue("email", "admin@demo.com");
+                    form.setValue("password", "demo1234");
+                  }}
+                >
+                  Admin — admin@demo.com
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    form.setValue("email", "recruiter@demo.com");
+                    form.setValue("password", "demo1234");
+                  }}
+                >
+                  Recruiter — recruiter@demo.com
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    form.setValue("email", "user@demo.com");
+                    form.setValue("password", "demo1234");
+                  }}
+                >
+                  User — user@demo.com
+                </Button>
+              </div>
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button variant="secondary" type="button">
+                    Close
+                  </Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
       </form>
     </Form>

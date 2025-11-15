@@ -24,6 +24,10 @@ const AuthCardWrapper = ({
   children,
   socials = true,
 }: AuthCardWrapperProps) => {
+  const enableGoogle = !!process.env.GOOGLE_ID && !!process.env.GOOGLE_SECRET;
+  const enableGithub = !!process.env.GITHUB_ID && !!process.env.GITHUB_SECRET;
+  const enableFacebook = !!process.env.FACEBOOK_ID && !!process.env.FACEBOOK_SECRET;
+  const anySocial = socials && (enableGoogle || enableGithub || enableFacebook);
   return (
     <Card className="max-w-[400px] w-full shadow-md">
       <CardHeader>
@@ -32,12 +36,10 @@ const AuthCardWrapper = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {socials && (
+        {anySocial && (
           <>
-            <SocialAuth />
-            <span className="text-muted-foreground text-center block my-4">
-              or
-            </span>
+            <SocialAuth google={enableGoogle} github={enableGithub} facebook={enableFacebook} />
+            <span className="text-muted-foreground text-center block my-4">or</span>
           </>
         )}
         {children}

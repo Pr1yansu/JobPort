@@ -909,6 +909,7 @@ const app = new Hono()
       // Get all applicants for jobs posted by current user
       const data = await db
         .select({
+          applicationId: applicants.id,
           applicantId: users.id,
           name: users.name,
           email: users.email,
@@ -928,7 +929,8 @@ const app = new Hono()
 
       // Transform to match frontend format
       const formatted = data.map((item) => ({
-        id: item.applicantId,
+        id: item.applicationId,
+        userId: item.applicantId,
         name: item.name,
         email: item.email,
         avatar: item.avatar ?? "/placeholder.svg",
@@ -958,6 +960,89 @@ const app = new Hono()
         success: false,
         message: "Failed to fetch applicants",
         applicants: [],
+      });
+    }
+  })
+  .patch(
+    "/applicant/:id",
+    zValidator(
+      "json",
+      z.object({
+        status: z.enum(["APPLIED", "INTERVIEWED", "OFFERED", "REJECTED"]),
+      })
+    ),
+    async (c) => {
+      try {
+        const session = await auth();
+        const user = session?.user;
+
+        if (!user) {
+          return c.json({ success: false, message: "User not found" });
+        }
+
+        if (user.role !== "RECRUITER" && user.role !== "ADMIN") {
+          return c.json({ success: false, message: "User not authorized" });
+        }
+
+        const { id } = c.req.param();
+        const { status } = c.req.valid("json");
+
+        const [updated] = await db
+          .update(applicants)
+          .set({ status })
+          .where(eq(applicants.id, id))
+          .returning();
+
+        if (!updated) {
+          return c.json({ success: false, message: "Applicant not found" });
+        }
+
+        return c.json({
+          success: true,
+          message: `Applicant status updated to ${status}`,
+          applicant: updated,
+        });
+      } catch (error) {
+        console.error(error);
+        return c.json({ success: false, message: "Failed to update applicant status" });
+      }
+    }
+  )
+  .get("/get/posted-jobs", async (c) => {
+    try {
+      const session = await auth();
+      const user = session?.user;
+
+      if (!user) {
+        return c.json({ success: false, message: "User not found", jobs: [] });
+      }
+
+      if (user.role !== "RECRUITER" && user.role !== "ADMIN") {
+        return c.json({ success: false, message: "User not authorized", jobs: [] });
+      }
+
+      const data = await db.query.jobs.findMany({
+        where: (jobs) => eq(jobs.postedBy, user.id as string),
+        with: {
+          company: true,
+          jobType: true,
+          jobLocation: true,
+          applicants: true,
+        },
+        orderBy: (jobs, { desc }) => [desc(jobs.postedDate)],
+      });
+
+      return c.json({
+        success: true,
+        message: "Posted jobs fetched successfully",
+        jobs: data,
+      });
+    } catch (error) {
+      console.error(error);
+      return c.json({
+        success: false,
+        message: "Failed to fetch posted jobs",
+        jobs: [],
       });
     }
   });

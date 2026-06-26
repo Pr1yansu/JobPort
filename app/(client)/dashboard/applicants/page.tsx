@@ -29,7 +29,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockApplicants } from "@/data/mock-data";
 import { cn } from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { useGetApplicants } from "@/features/jobs/api/use-job";
+import { useGetApplicants, useUpdateApplicantStatus } from "@/features/jobs/api/use-job";
 
 // Define status config with all possible status values
 const statusConfig = {
@@ -84,6 +84,19 @@ const ApplicantsPage = () => {
     null
   );
   const { data, isPending } = useGetApplicants();
+  const updateStatus = useUpdateApplicantStatus();
+
+  const handleStatusUpdate = (status: "APPLIED" | "INTERVIEWED" | "OFFERED" | "REJECTED") => {
+    if (!selectedApplicant?.id) return;
+    updateStatus.mutate({
+      param: { id: selectedApplicant.id },
+      json: { status },
+    }, {
+      onSuccess: () => {
+        setSelectedApplicant((prev: any) => prev ? { ...prev, status } : null);
+      }
+    });
+  };
 
   useEffect(() => {
     if (data?.applicants && data.applicants.length > 0) {
@@ -307,15 +320,19 @@ const ApplicantsPage = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleStatusUpdate("OFFERED")}>
                         <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                        Approve
+                        Approve / Offer
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleStatusUpdate("INTERVIEWED")}>
+                        <Briefcase className="w-4 h-4 mr-2 text-purple-600" />
+                        Mark Interviewed
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleStatusUpdate("REJECTED")}>
                         <XCircle className="w-4 h-4 mr-2 text-red-600" />
                         Reject
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => window.location.href = `mailto:${selectedApplicant.email}`}>
                         <Mail className="w-4 h-4 mr-2" />
                         Send Message
                       </DropdownMenuItem>
@@ -422,15 +439,24 @@ const ApplicantsPage = () => {
 
               {/* Actions */}
               <div className="flex space-x-3 pt-4">
-                <Button className="flex-1">
+                <Button 
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+                  disabled={updateStatus.isPending}
+                  onClick={() => handleStatusUpdate("OFFERED")}
+                >
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Approve Application
                 </Button>
-                <Button variant="outline" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  className="flex-1 border-red-200 text-red-700 hover:bg-red-50 font-semibold"
+                  disabled={updateStatus.isPending}
+                  onClick={() => handleStatusUpdate("REJECTED")}
+                >
                   <XCircle className="w-4 h-4 mr-2" />
                   Reject Application
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => window.location.href = `mailto:${selectedApplicant.email}`}>
                   <Mail className="w-4 h-4 mr-2" />
                   Send Message
                 </Button>

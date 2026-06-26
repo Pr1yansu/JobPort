@@ -236,3 +236,62 @@ export const useGetApplicants = () => {
 
   return query;
 };
+
+type UpdateApplicantStatusResponseType = InferResponseType<
+  (typeof client.api.data.jobs.applicant)[":id"]["$patch"]
+>;
+type UpdateApplicantStatusRequestType = InferRequestType<
+  (typeof client.api.data.jobs.applicant)[":id"]["$patch"]
+>;
+
+type GetPostedJobsResponseType = InferResponseType<
+  (typeof client.api.data.jobs.get)["posted-jobs"]["$get"]
+>;
+
+export const useUpdateApplicantStatus = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation<
+    UpdateApplicantStatusResponseType,
+    Error,
+    UpdateApplicantStatusRequestType
+  >({
+    mutationFn: async ({ param, json }) => {
+      const response = await client.api.data.jobs.applicant[":id"]["$patch"]({
+        param,
+        json,
+      });
+      return await response.json();
+    },
+    onSuccess: ({ message, success }) => {
+      if (success) {
+        toast.success(message);
+        queryClient.invalidateQueries({
+          queryKey: ["applicants"],
+        });
+      } else {
+        toast.error(message);
+      }
+    },
+    onError: (error) => {
+      if (error instanceof ZodError) {
+        return toast.error(error.errors[0].message);
+      }
+      toast.error(error.message);
+    },
+  });
+
+  return mutation;
+};
+
+export const useGetPostedJobs = () => {
+  const query = useQuery<GetPostedJobsResponseType, Error>({
+    queryKey: ["postedJobs"],
+    queryFn: async () => {
+      const response = await client.api.data.jobs.get["posted-jobs"]["$get"]();
+      return await response.json();
+    },
+  });
+
+  return query;
+};
+

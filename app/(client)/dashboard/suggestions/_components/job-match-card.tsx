@@ -290,37 +290,37 @@ export default function JobMatchCards() {
   }
 
   return (
-    <div className="relative w-full max-w-sm mx-auto">
+    <div className="relative w-full max-w-xl mx-auto py-4">
       {/* Job Saved Notification */}
       {showSaved && lastSaved && (
-        <div className="fixed inset-0 bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center z-50 animate-in fade-in duration-300">
-          <div className="text-center text-white space-y-4">
+        <div className="fixed inset-0 bg-zinc-900/80 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-300">
+          <div className="text-center text-white space-y-4 max-w-md p-8 bg-zinc-900 border border-zinc-700 rounded-3xl shadow-2xl">
             <div className="text-6xl animate-bounce">💼</div>
-            <h2 className="text-3xl font-bold">Job Saved!</h2>
-            <p className="text-lg">You're interested in {lastSaved.title}</p>
-            <p className="text-sm">at {lastSaved.company.name}</p>
+            <h2 className="text-3xl font-extrabold tracking-tight">Job Saved!</h2>
+            <p className="text-lg text-zinc-300">You matched with <span className="text-white font-bold">{lastSaved.title}</span></p>
+            <p className="text-sm text-zinc-400">at {lastSaved.company?.name || "Company"}</p>
           </div>
         </div>
       )}
 
       {/* Job Card Stack */}
-      <div className="relative h-[600px]">
+      <div className="relative h-[580px] w-full">
         {currentJobs.map((job, index) => (
           <Card
             key={job.id}
             ref={(el) => {
               cardRefs.current[index] = el;
             }}
-            className={`absolute inset-0 cursor-grab active:cursor-grabbing transition-all duration-300 ${
+            className={`absolute inset-0 cursor-grab active:cursor-grabbing transition-all duration-300 border-2 border-zinc-200 bg-white shadow-2xl rounded-3xl overflow-hidden ${
               index === 0
                 ? "z-30"
                 : index === 1
-                  ? "z-20 scale-95"
-                  : "z-10 scale-90"
+                  ? "z-20 scale-[0.96]"
+                  : "z-10 scale-[0.92]"
             }`}
             style={{
-              transform: `scale(${1 - index * 0.05}) translateY(${index * 8}px)`,
-              opacity: 1 - index * 0.2,
+              transform: `scale(${1 - index * 0.04}) translateY(${index * 12}px)`,
+              opacity: 1 - index * 0.15,
             }}
             onMouseDown={
               index === 0 ? (e) => handleCardInteraction(e, 0) : undefined
@@ -329,58 +329,59 @@ export default function JobMatchCards() {
               index === 0 ? (e) => handleCardInteraction(e, 0) : undefined
             }
           >
-            <CardContent className="p-0 h-full relative overflow-hidden">
+            <CardContent className="p-0 h-full relative flex flex-col overflow-hidden">
               {/* Interested/Not Interested Indicators */}
               <div className="interested-indicator absolute top-8 right-8 z-40 opacity-0 transition-opacity">
-                <div className="bg-green-500 text-white px-4 py-2 rounded-full font-bold text-lg border-4 border-green-400 rotate-12">
-                  INTERESTED
+                <div className="bg-emerald-500 text-white px-6 py-2 rounded-full font-black text-xl tracking-wider shadow-lg border-4 border-white rotate-12">
+                  MATCH
                 </div>
               </div>
               <div className="not-interested-indicator absolute top-8 left-8 z-40 opacity-0 transition-opacity">
-                <div className="bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg border-4 border-red-400 -rotate-12">
+                <div className="bg-rose-500 text-white px-6 py-2 rounded-full font-black text-xl tracking-wider shadow-lg border-4 border-white -rotate-12">
                   PASS
                 </div>
               </div>
 
               {/* Company Header */}
-              <div className="relative h-32 bg-gradient-to-br from-blue-100 to-purple-100 p-6 flex items-center">
-                <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mr-4 shadow-md">
+              <div className="relative h-36 bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 p-6 flex items-center text-white">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div className="relative z-10 w-20 h-20 bg-white rounded-2xl flex items-center justify-center mr-5 shadow-xl border border-zinc-200 p-2">
                   {job.company?.logoUrl ? (
                     <img
                       src={job.company.logoUrl || "/placeholder.svg"}
                       alt={job.company.name}
-                      className="w-12 h-12 object-contain"
+                      className="w-full h-full object-contain"
                     />
                   ) : (
-                    <Building2 className="w-8 h-8 text-blue-600" />
+                    <Building2 className="w-10 h-10 text-zinc-800" />
                   )}
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg text-gray-800">
+                <div className="relative z-10 flex-1">
+                  <h3 className="font-bold text-2xl text-white tracking-tight">
                     {job.company?.name || "Company Name"}
                   </h3>
-                  <div className="flex items-center text-sm text-gray-600 mt-1">
-                    <MapPin className="w-4 h-4 mr-1" />
+                  <div className="flex items-center text-sm text-zinc-300 mt-1 font-medium">
+                    <MapPin className="w-4 h-4 mr-1.5 text-zinc-400" />
                     {job.jobLocation?.label || "Location"}
                   </div>
                 </div>
               </div>
 
               {/* Job Details */}
-              <div className="p-6 space-y-4 h-[calc(100%-8rem)] overflow-y-auto">
+              <div className="p-8 space-y-6 flex-1 overflow-y-auto bg-zinc-50/50">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-extrabold text-zinc-900 tracking-tight mb-3">
                     {job.title}
                   </h2>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                    <div className="flex items-center">
-                      <DollarSign className="w-4 h-4 mr-1" />
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-zinc-600 font-semibold mb-4">
+                    <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-zinc-200 shadow-sm">
+                      <DollarSign className="w-4 h-4 text-zinc-900" />
                       {job.salary && job.currencyType
                         ? formatSalary(job.salary, job.currencyType)
                         : "Salary not specified"}
                     </div>
-                    <div className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-1" />
+                    <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-zinc-200 shadow-sm">
+                      <Calendar className="w-4 h-4 text-zinc-900" />
                       {job.postedDate
                         ? formatDate(job.postedDate)
                         : "Date not available"}
@@ -388,46 +389,43 @@ export default function JobMatchCards() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {job.jobType?.label && (
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-xs font-bold uppercase tracking-wider bg-zinc-200 text-zinc-800 px-3 py-1">
                       {job.jobType.label}
                     </Badge>
                   )}
                   {job.status && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider border-zinc-300 text-zinc-700 px-3 py-1">
                       {job.status}
                     </Badge>
                   )}
                   {job.approved === "APPROVED" && (
-                    <Badge
-                      variant="default"
-                      className="text-xs bg-green-100 text-green-800"
-                    >
+                    <Badge className="text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-700 border border-emerald-500/30 px-3 py-1">
                       Verified
                     </Badge>
                   )}
                 </div>
 
-                <div>
-                  <h4 className="font-semibold mb-2">Job Description</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">
+                <div className="space-y-2">
+                  <h4 className="text-base font-bold text-zinc-900">Job Description</h4>
+                  <p className="text-sm text-zinc-600 leading-relaxed font-normal">
                     {job.description
                       ? stripHtml(job.description)
                       : "No description available"}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t">
-                  <div className="flex justify-between text-xs text-gray-500">
+                <div className="pt-6 border-t border-zinc-200/80 mt-auto">
+                  <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase tracking-wider">
                     <span>
-                      Posted by: {job.postedByUser?.name || "Unknown"}
+                      Posted by: {job.postedByUser?.name || "Hiring Manager"}
                     </span>
                     <span>
                       Deadline:{" "}
                       {job.deadline
                         ? formatDate(job.deadline)
-                        : "Not specified"}
+                        : "Flexible"}
                     </span>
                   </div>
                 </div>
@@ -438,51 +436,51 @@ export default function JobMatchCards() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-center items-center gap-4 mt-6">
+      <div className="flex justify-center items-center gap-6 mt-8">
         <Button
           variant="outline"
           size="icon"
-          className="h-14 w-14 rounded-full border-2 hover:bg-red-50 hover:border-red-200"
+          className="h-16 w-16 rounded-full border-2 border-red-200 bg-white hover:bg-red-500 hover:border-red-500 hover:text-white group shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95"
           onClick={() => handleSwipe("left")}
           disabled={currentJobs.length === 0 || isAnimating}
         >
-          <X className="h-6 w-6 text-red-500" />
+          <X className="h-8 w-8 text-red-500 group-hover:text-white transition-colors duration-200" />
         </Button>
 
         <Button
           variant="outline"
           size="icon"
-          className="h-12 w-12 rounded-full border-2 hover:bg-blue-50 hover:border-blue-200"
+          className="h-14 w-14 rounded-full border-2 border-blue-200 bg-white hover:bg-blue-500 hover:border-blue-500 hover:text-white group shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95"
           onClick={handleUndo}
           disabled={savedJobs.length === 0 || isAnimating}
         >
-          <RotateCcw className="h-5 w-5 text-blue-500" />
+          <RotateCcw className="h-6 w-6 text-blue-500 group-hover:text-white transition-colors duration-200" />
         </Button>
 
         <Button
           variant="outline"
           size="icon"
-          className="h-12 w-12 rounded-full border-2 hover:bg-yellow-50 hover:border-yellow-200"
+          className="h-14 w-14 rounded-full border-2 border-amber-200 bg-white hover:bg-amber-500 hover:border-amber-500 hover:text-white group shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95"
           disabled={currentJobs.length === 0 || isAnimating}
         >
-          <Bookmark className="h-5 w-5 text-yellow-500" />
+          <Bookmark className="h-6 w-6 text-amber-500 group-hover:text-white transition-colors duration-200" />
         </Button>
 
         <Button
           variant="outline"
           size="icon"
-          className="h-14 w-14 rounded-full border-2 hover:bg-green-50 hover:border-green-200"
+          className="h-16 w-16 rounded-full border-2 border-emerald-200 bg-white hover:bg-emerald-500 hover:border-emerald-500 hover:text-white group shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95"
           onClick={() => handleSwipe("right")}
           disabled={currentJobs.length === 0 || isAnimating}
         >
-          <Heart className="h-6 w-6 text-green-500" />
+          <Heart className="h-8 w-8 text-emerald-500 group-hover:text-white transition-colors duration-200" />
         </Button>
       </div>
 
       {/* Stats */}
-      <div className="text-center mt-4">
-        <p className="text-sm text-muted-foreground">
-          {savedJobs.length} saved jobs • {currentJobs.length} jobs remaining
+      <div className="text-center mt-6">
+        <p className="text-sm font-semibold text-zinc-500 bg-zinc-100 py-2 px-4 rounded-full inline-block border border-zinc-200">
+          <span className="text-emerald-600 font-bold">{savedJobs.length} saved</span> • <span className="text-zinc-700 font-bold">{currentJobs.length} remaining</span>
         </p>
       </div>
     </div>

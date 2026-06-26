@@ -2,32 +2,14 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { auth } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  BriefcaseBusiness,
-  Building2,
-  CalendarCheck2,
-  CircleFadingPlus,
-  FileUser,
-  LayoutDashboard,
-  LogOut,
-  Star,
-  User,
-  UserPen,
-  Users,
-} from "lucide-react";
-import Link from "next/link";
+import { Star } from "lucide-react";
 import InviteFriends from "./invite-friends";
-import LogoutBtn from "@/components/ui/logout-btn";
 import ApplyAsRecruiter from "./apply-as-recruiter";
 import RazorpayButton from "./payment-btn";
-import NonPremiumButton from "./non-premium-button";
-import { FaRobot } from "react-icons/fa6";
+import SidebarNavigation from "./sidebar-navigation";
 
 export const revalidate = 60;
 
@@ -35,66 +17,6 @@ export async function AppSidebar() {
   const session = await auth();
   const user = session?.user;
   if (!user) return null;
-
-  const items = [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      title: "Jobs",
-      url: "/dashboard/jobs",
-      icon: BriefcaseBusiness,
-    },
-    {
-      title: "Resume",
-      url: "/dashboard/resume",
-      icon: FileUser,
-    },
-
-    {
-      title: "AI Suggestions",
-      url: "/dashboard/suggestions",
-      icon: FaRobot,
-    },
-    {
-      title: "Profile",
-      url: "/dashboard/profile",
-      icon: User,
-    },
-  ];
-
-  if (user.role === "ADMIN") {
-    items.splice(2, 0, {
-      title: "Users",
-      url: "/dashboard/users",
-      icon: Users,
-    });
-  }
-
-  if (user.role === "RECRUITER" || user.role === "ADMIN") {
-    items.splice(
-      2,
-      0,
-      {
-        title: "Post Job",
-        url: "/dashboard/post-job",
-        icon: CircleFadingPlus,
-      },
-      {
-        title: "Posted jobs",
-        url: "/dashboard/posted-jobs",
-        icon: CalendarCheck2,
-      },
-      {
-        title: "Companies",
-        url: "/dashboard/company",
-        icon: Building2,
-      },
-      { title: "Applicants", url: "/dashboard/applicants", icon: UserPen }
-    );
-  }
 
   return (
     <Sidebar className="no-print">
@@ -116,37 +38,7 @@ export async function AppSidebar() {
             </h4>
           </div>
         </SidebarHeader>
-        <SidebarMenu className="h-full">
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                {item.title === "Resume" ? (
-                  user.premium ? (
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  ) : (
-                    <NonPremiumButton feature="Resume Builder" />
-                  )
-                ) : (
-                  <Link href={item.url}>
-                    <item.icon />
-                    <span>{item.title}</span>
-                  </Link>
-                )}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-          <SidebarMenuItem>
-            <LogoutBtn asChild>
-              <div className="flex text-sm px-2 py-1.5 gap-2 items-center hover:bg-zinc-100 w-full rounded-sm">
-                <LogOut size={16} />
-                <span>Logout</span>
-              </div>
-            </LogoutBtn>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarNavigation user={user} />
         {user.premium ? (
           <span className="text-yellow-400 flex justify-center items-center text-sm font-semibold mt-4 uppercase">
             Premium User <Star className="inline size-4 ml-1" />

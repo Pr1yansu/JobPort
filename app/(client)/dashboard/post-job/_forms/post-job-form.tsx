@@ -154,26 +154,29 @@ const PostJobForm = () => {
 
   return (
     <>
-      <Card className="w-full max-w-4xl mx-auto">
-        <CardHeader>
-          <CardTitle>Post a New Job</CardTitle>
+      <Card className="w-full max-w-5xl mx-auto bg-white border border-zinc-200 shadow-xl rounded-2xl overflow-hidden backdrop-blur-sm transition-all duration-200">
+        <CardHeader className="bg-zinc-50 border-b border-zinc-100 px-8 py-6">
+          <CardTitle className="text-xl font-bold text-zinc-900 tracking-tight flex items-center gap-2">
+            <span>Role Specifications & Requisition Details</span>
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-8">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <div className="grid md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Title <span className="text-red-500">*</span>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                        Job Title <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="Enter job title"
+                          className="h-12 px-4 rounded-xl border-zinc-200 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 text-base transition-all duration-200 bg-zinc-50/50"
+                          placeholder="e.g. Senior Full-Stack Engineer"
                           disabled={isJobPending}
                         />
                       </FormControl>
@@ -185,13 +188,14 @@ const PostJobForm = () => {
                   control={form.control}
                   name="salary"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Salary <span className="text-red-500">*</span>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                        Monthly Salary <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Enter salary"
+                          className="h-12 px-4 rounded-xl border-zinc-200 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 text-base transition-all duration-200 bg-zinc-50/50"
+                          placeholder="Enter monthly base salary"
                           onChange={(e) =>
                             field.onChange(
                               e.target.value === ""
@@ -213,43 +217,47 @@ const PostJobForm = () => {
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Description <span className="text-red-500">*</span>
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      Job Description & Responsibilities <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <RichTextEditor
-                        value={field.value}
-                        onChange={(value) => {
-                          field.onChange(value);
-                        }}
-                      />
+                      <div className="border border-zinc-200 rounded-xl overflow-hidden shadow-sm bg-zinc-50/50 transition-all duration-200">
+                        <RichTextEditor
+                          value={field.value}
+                          onChange={(value) => {
+                            field.onChange(value);
+                          }}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-3 gap-8">
                 <FormField
                   control={form.control}
                   name="jobTypeId"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Job Type <span className="text-red-500">*</span>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                        Employment Type <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <CustomSelect
-                          onChange={field.onChange}
-                          options={jobTypesOptions}
-                          placeholder="Select a job type"
-                          onCreate={(e) => {
-                            addJobType({ value: e, label: e });
-                          }}
-                          value={field.value}
-                          disabled={isJobTypePending || isJobPending}
-                        />
+                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                          <CustomSelect
+                            onChange={field.onChange}
+                            options={jobTypesOptions}
+                            placeholder="Select a job type"
+                            onCreate={(e) => {
+                              addJobType({ value: e, label: e });
+                            }}
+                            value={field.value}
+                            disabled={isJobTypePending || isJobPending}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -259,21 +267,23 @@ const PostJobForm = () => {
                   control={form.control}
                   name="experienceLevelId"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
                         Experience Level <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <CustomSelect
-                          onChange={field.onChange}
-                          options={experienceLevelsOptions}
-                          placeholder="Select an experience level"
-                          onCreate={(e) => {
-                            addExperienceLevel({ value: e, label: e });
-                          }}
-                          value={field.value}
-                          disabled={isExperiencePending || isJobPending}
-                        />
+                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                          <CustomSelect
+                            onChange={field.onChange}
+                            options={experienceLevelsOptions}
+                            placeholder="Select an experience level"
+                            onCreate={(e) => {
+                              addExperienceLevel({ value: e, label: e });
+                            }}
+                            value={field.value}
+                            disabled={isExperiencePending || isJobPending}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -283,21 +293,23 @@ const PostJobForm = () => {
                   control={form.control}
                   name="jobLocationId"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
                         Job Location <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <CustomSelect
-                          onChange={field.onChange}
-                          options={jobLocationsOptions}
-                          placeholder="Select a job location"
-                          onCreate={(e) => {
-                            addJobLocation({ value: e, label: e });
-                          }}
-                          value={field.value}
-                          disabled={isJobLocationPending || isJobPending}
-                        />
+                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                          <CustomSelect
+                            onChange={field.onChange}
+                            options={jobLocationsOptions}
+                            placeholder="Select a job location"
+                            onCreate={(e) => {
+                              addJobLocation({ value: e, label: e });
+                            }}
+                            value={field.value}
+                            disabled={isJobLocationPending || isJobPending}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -309,58 +321,62 @@ const PostJobForm = () => {
                 control={form.control}
                 name="companyId"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Company <span className="text-red-500">*</span>
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      Hiring Organization / Company <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <CustomSelect
-                        imageUpload
-                        onChange={field.onChange}
-                        options={companiesOptions}
-                        setLogoUrl={setLogoUrl}
-                        placeholder="Select a company"
-                        onCreate={async (e) => {
-                          if (!logoUrl) {
-                            const isConfirmed = await confirm();
-                            if (isConfirmed) {
+                      <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                        <CustomSelect
+                          imageUpload
+                          onChange={field.onChange}
+                          options={companiesOptions}
+                          setLogoUrl={setLogoUrl}
+                          placeholder="Select a company"
+                          onCreate={async (e) => {
+                            if (!logoUrl) {
+                              const isConfirmed = await confirm();
+                              if (isConfirmed) {
+                                addCompany({
+                                  name: e.toLowerCase().replace(/\s/g, "-"),
+                                });
+                              }
+                            } else {
                               addCompany({
                                 name: e.toLowerCase().replace(/\s/g, "-"),
+                                logoUrl,
                               });
                             }
-                          } else {
-                            addCompany({
-                              name: e.toLowerCase().replace(/\s/g, "-"),
-                              logoUrl,
-                            });
-                          }
-                        }}
-                        onUpload={setLogoUrl}
-                        value={field.value}
-                        uploadValue={logoUrl}
-                        disabled={isCompanyPending || isJobPending}
-                      />
+                          }}
+                          onUpload={setLogoUrl}
+                          value={field.value}
+                          uploadValue={logoUrl}
+                          disabled={isCompanyPending || isJobPending}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
                   name="deadline"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Deadline <span className="text-red-500">*</span>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                        Application Deadline <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <DatePicker
-                          onChange={field.onChange}
-                          value={field.value}
-                          disabled={{ before: new Date() }}
-                        />
+                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                          <DatePicker
+                            onChange={field.onChange}
+                            value={field.value}
+                            disabled={{ before: new Date() }}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -370,8 +386,8 @@ const PostJobForm = () => {
                   control={form.control}
                   name="currencyType"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
                         Currency Type <span className="text-red-500">*</span>
                       </FormLabel>
                       <Select
@@ -380,14 +396,14 @@ const PostJobForm = () => {
                         disabled={isJobPending}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="h-12 px-4 rounded-xl border-zinc-200 bg-zinc-50/50 focus:ring-2 focus:ring-zinc-900 text-base">
                             <SelectValue placeholder="Select currency" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="rounded-xl border-zinc-200 shadow-lg">
                           {["USD", "EUR", "GBP", "NGN", "INR"].map(
                             (currency) => (
-                              <SelectItem key={currency} value={currency}>
+                              <SelectItem key={currency} value={currency} className="rounded-lg py-2 cursor-pointer">
                                 {currency}
                               </SelectItem>
                             )
@@ -404,34 +420,43 @@ const PostJobForm = () => {
                 control={form.control}
                 name="skillIds"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Skill sets <span className="text-red-500">*</span>
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      Required Skill Sets <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <CustomSelect
-                        onChange={field.onChange}
-                        options={skillsOptions}
-                        placeholder="Select multiple skill sets"
-                        onCreate={(e) => {
-                          addSkill({
-                            label: e,
-                            value: e.toLowerCase().replace(/\s/g, "-"),
-                          });
-                        }}
-                        value={field.value}
-                        disabled={isSkillsPending || isJobPending}
-                        multiple
-                      />
+                      <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                        <CustomSelect
+                          onChange={field.onChange}
+                          options={skillsOptions}
+                          placeholder="Select multiple skill sets"
+                          onCreate={(e) => {
+                            addSkill({
+                              label: e,
+                              value: e.toLowerCase().replace(/\s/g, "-"),
+                            });
+                          }}
+                          value={field.value}
+                          disabled={isSkillsPending || isJobPending}
+                          multiple
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isJobPending}>
-                Post this job <SendHorizonalIcon className="w-6 h-6 ml-2" />
-              </Button>
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  className="w-full h-14 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-lg shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] rounded-xl flex items-center justify-center gap-3"
+                  disabled={isJobPending}
+                >
+                  <span>Publish Job Opportunity</span>
+                  <SendHorizonalIcon className="w-6 h-6 text-zinc-400" />
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

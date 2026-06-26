@@ -46,7 +46,7 @@ const JobSection = () => {
   };
 
   const handleJobSelect = (id: string) => {
-    if (currentWidth > 1080) {
+    if (currentWidth > 768) {
       const params = new URLSearchParams(searchParams);
       if (params.has("job")) {
         params.set("job", id);
@@ -95,26 +95,26 @@ const JobSection = () => {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full gap-6">
       <motion.div
         className={cn(
-          "px-3 space-y-2",
-          currentWidth > 1080 && searchParams.has("job")
-            ? "w-1/3 border-r h-full"
+          "space-y-3",
+          currentWidth > 768
+            ? "w-full md:w-1/2 lg:w-5/12 border-r border-zinc-200 h-full pr-6"
             : "w-full"
         )}
         variants={jobListVariants}
         initial="hidden"
         animate="show"
       >
-        <div className="space-y-1 mb-4">
-          <h4 className="text-base font-semibold">
+        <div className="space-y-1 mb-6">
+          <h4 className="text-xl font-bold text-zinc-900 tracking-tight">
             {searchParams.get("job") ? "Jobs" : "Recent Jobs List"}
           </h4>
-          <p className="text-sm text-primary/60">
+          <p className="text-sm font-medium text-zinc-500">
             {data?.totalCount && data?.totalCount > 1
-              ? `${data?.totalCount} results`
-              : `${data?.totalCount} result`}
+              ? `${data?.totalCount} results found`
+              : `${data?.totalCount || 0} result found`}
           </p>
         </div>
         {data?.jobs?.map((job) => (
@@ -122,7 +122,7 @@ const JobSection = () => {
             <JobButton
               handleBookmarkClick={handleBookmarkClick}
               handleJobSelect={handleJobSelect}
-              selected={searchParams.get("job") === job.id}
+              selected={searchParams.get("job") === job.id || (!searchParams.get("job") && data?.jobs?.[0]?.id === job.id)}
               job={{
                 id: job.id,
                 image: job.company.logoUrl || undefined,
@@ -140,15 +140,15 @@ const JobSection = () => {
         ))}
       </motion.div>
       <AnimatePresence>
-        {currentWidth > 1080 && searchParams.has("job") && (
+        {currentWidth > 768 && (searchParams.get("job") || data?.jobs?.[0]?.id) && (
           <motion.div
-            className="w-2/3 px-5"
+            className="w-full md:w-1/2 lg:w-7/12 pl-2 pr-4"
             variants={jobDetailsVariants}
             initial="hidden"
             animate="show"
             exit="hidden"
           >
-            <JobDetails id={searchParams.get("job") || ""} />
+            <JobDetails id={searchParams.get("job") || data?.jobs?.[0]?.id || ""} />
           </motion.div>
         )}
       </AnimatePresence>

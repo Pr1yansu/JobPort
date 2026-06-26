@@ -62,13 +62,13 @@ const Dashboard = async () => {
             {user.role === "USER" && (
               <>
                 <Link href="/dashboard/jobs">
-                  <Button className="bg-white text-zinc-900 hover:bg-zinc-100 font-semibold shadow-lg transition-all duration-200 hover:scale-[1.02]">
-                    Explore Jobs <ArrowRight className="ml-2 size-4" />
+                  <Button className="bg-white text-zinc-900 hover:bg-zinc-100 font-bold shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 px-6 py-5 text-sm rounded-xl flex items-center gap-2">
+                    Explore Jobs <ArrowRight className="size-4 text-zinc-900" />
                   </Button>
                 </Link>
                 <Link href="/dashboard/resume">
-                  <Button variant="outline" className="text-zinc-900 border-zinc-600 hover:bg-zinc-100/10 font-semibold backdrop-blur-sm transition-all duration-200">
-                    <FileUser className="mr-2 size-4" /> Manage Resume
+                  <Button variant="outline" className="text-white border-zinc-500 bg-white/5 hover:bg-white/15 hover:border-zinc-300 hover:text-white font-semibold backdrop-blur-md shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 px-6 py-5 text-sm rounded-xl flex items-center gap-2">
+                    <FileUser className="size-4 text-zinc-300" /> Manage Resume
                   </Button>
                 </Link>
               </>
@@ -76,13 +76,13 @@ const Dashboard = async () => {
             {(user.role === "RECRUITER" || user.role === "ADMIN") && (
               <>
                 <Link href="/dashboard/post-job">
-                  <Button className="bg-white text-zinc-900 hover:bg-zinc-100 font-semibold shadow-lg transition-all duration-200 hover:scale-[1.02]">
-                    <CircleFadingPlus className="mr-2 size-4" /> Post New Job
+                  <Button className="bg-white text-zinc-900 hover:bg-zinc-100 font-bold shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 px-6 py-5 text-sm rounded-xl flex items-center gap-2">
+                    <CircleFadingPlus className="size-4 text-zinc-900" /> Post New Job
                   </Button>
                 </Link>
                 <Link href="/dashboard/applicants">
-                  <Button variant="outline" className="text-zinc-900 border-zinc-600 hover:bg-zinc-100/10 font-semibold backdrop-blur-sm transition-all duration-200">
-                    <UserPen className="mr-2 size-4" /> Review Applicants
+                  <Button variant="outline" className="text-white border-zinc-500 bg-white/5 hover:bg-white/15 hover:border-zinc-300 hover:text-white font-semibold backdrop-blur-md shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 px-6 py-5 text-sm rounded-xl flex items-center gap-2">
+                    <UserPen className="size-4 text-zinc-300" /> Review Applicants
                   </Button>
                 </Link>
               </>

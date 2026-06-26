@@ -86,11 +86,11 @@ const ApplicantsPage = () => {
   const { data, isPending } = useGetApplicants();
   const updateStatus = useUpdateApplicantStatus();
 
-  const handleStatusUpdate = (status: "APPLIED" | "INTERVIEWED" | "OFFERED" | "REJECTED") => {
+  const handleStatusUpdate = (status: "APPROVED" | "INTERVIEWED" | "OFFERED" | "REJECTED") => {
     if (!selectedApplicant?.id) return;
     updateStatus.mutate({
       param: { id: selectedApplicant.id },
-      json: { status },
+      json: { status: status as any },
     }, {
       onSuccess: () => {
         setSelectedApplicant((prev: any) => prev ? { ...prev, status } : null);
@@ -98,13 +98,13 @@ const ApplicantsPage = () => {
     });
   };
 
-  useEffect(() => {
-    if (data?.applicants && data.applicants.length > 0) {
-      setSelectedApplicant(data.applicants[0]);
-    }
-  }, [data]);
+  const applicants = data?.applicants?.length ? data.applicants : mockApplicants;
 
-  const applicants = data?.applicants || mockApplicants;
+  useEffect(() => {
+    if (!selectedApplicant && applicants.length > 0) {
+      setSelectedApplicant(applicants[0]);
+    }
+  }, [applicants, selectedApplicant]);
 
   const filteredApplicants = applicants.filter((applicant: Applicant) => {
     const matchesSearch =
@@ -112,7 +112,7 @@ const ApplicantsPage = () => {
       applicant.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       applicant.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
-      statusFilter === "all" || applicant.status === statusFilter;
+      statusFilter === "all" || applicant.status === statusFilter || (statusFilter === "APPROVED" && applicant.status === "OFFERED");
     return matchesSearch && matchesStatus;
   });
 
@@ -128,21 +128,17 @@ const ApplicantsPage = () => {
     };
 
     applicants.forEach((a: Applicant) => {
-      if (a.status) {
+      if (a.status && counts[a.status] !== undefined) {
         counts[a.status]++;
       }
     });
+
+    counts.APPROVED += counts.OFFERED;
 
     return counts;
   };
 
   const statusCounts = getStatusCounts();
-
-  useEffect(() => {
-    if (!selectedApplicant && filteredApplicants.length > 0) {
-      setSelectedApplicant(filteredApplicants[0]);
-    }
-  }, [filteredApplicants, selectedApplicant]);
 
   if (isPending) {
     return (
@@ -440,16 +436,16 @@ const ApplicantsPage = () => {
               {/* Actions */}
               <div className="flex space-x-3 pt-4">
                 <Button 
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                   disabled={updateStatus.isPending}
-                  onClick={() => handleStatusUpdate("OFFERED")}
+                  onClick={() => handleStatusUpdate("APPROVED")}
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Approve Application
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="flex-1 border-red-200 text-red-700 hover:bg-red-50 font-semibold"
+                  className="flex-1 border-red-200 text-red-700 hover:bg-red-50 font-semibold shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                   disabled={updateStatus.isPending}
                   onClick={() => handleStatusUpdate("REJECTED")}
                 >

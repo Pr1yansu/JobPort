@@ -103,7 +103,7 @@ const PostJobForm = () => {
   }
 
   const companiesOptions = React.useMemo(() => {
-    return companyData?.companies.map((company) => ({
+    return companyData?.companies?.map((company) => ({
       label: company.name,
       value: company.id,
       image: company.logoUrl,
@@ -111,28 +111,28 @@ const PostJobForm = () => {
   }, [companyData]);
 
   const jobTypesOptions = React.useMemo(() => {
-    return jobTypeData?.jobTypes.map((jobType) => ({
+    return jobTypeData?.jobTypes?.map((jobType) => ({
       label: jobType.label,
       value: jobType.id,
     }));
   }, [jobTypeData]);
 
   const jobLocationsOptions = React.useMemo(() => {
-    return jobLocationData?.jobLocations.map((jobLocation) => ({
+    return jobLocationData?.jobLocations?.map((jobLocation) => ({
       label: jobLocation.label,
       value: jobLocation.id,
     }));
   }, [jobLocationData]);
 
   const experienceLevelsOptions = React.useMemo(() => {
-    return experienceLevelData?.experienceLevels.map((experienceLevel) => ({
+    return experienceLevelData?.experienceLevels?.map((experienceLevel) => ({
       label: experienceLevel.label,
       value: experienceLevel.id,
     }));
   }, [experienceLevelData]);
 
   const skillsOptions = React.useMemo(() => {
-    return skillData?.skills.map((skill) => ({
+    return skillData?.skills?.map((skill) => ({
       label: skill.label,
       value: skill.id,
     }));
@@ -154,9 +154,9 @@ const PostJobForm = () => {
 
   return (
     <>
-      <Card className="w-full max-w-5xl mx-auto bg-white border border-zinc-200 shadow-xl rounded-2xl overflow-hidden backdrop-blur-sm transition-all duration-200">
-        <CardHeader className="bg-zinc-50 border-b border-zinc-100 px-8 py-6">
-          <CardTitle className="text-xl font-bold text-zinc-900 tracking-tight flex items-center gap-2">
+      <Card className="w-full max-w-5xl mx-auto bg-white border border-zinc-200 shadow-sm rounded-xl overflow-hidden transition-all">
+        <CardHeader className="bg-white border-b border-zinc-200 px-8 py-6">
+          <CardTitle className="text-lg font-bold text-zinc-900 tracking-tight flex items-center gap-2">
             <span>Role Specifications & Requisition Details</span>
           </CardTitle>
         </CardHeader>
@@ -169,13 +169,13 @@ const PostJobForm = () => {
                   name="title"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                         Job Title <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="h-12 px-4 rounded-xl border-zinc-200 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 text-base transition-all duration-200 bg-zinc-50/50"
+                          className="h-11 px-4 rounded-lg bg-white border border-zinc-200 text-base shadow-sm focus-visible:ring-1 focus-visible:ring-zinc-900 focus-visible:border-zinc-900 transition-colors"
                           placeholder="e.g. Senior Full-Stack Engineer"
                           disabled={isJobPending}
                         />
@@ -189,12 +189,12 @@ const PostJobForm = () => {
                   name="salary"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                         Monthly Salary <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
-                          className="h-12 px-4 rounded-xl border-zinc-200 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 text-base transition-all duration-200 bg-zinc-50/50"
+                          className="h-11 px-4 rounded-lg bg-white border border-zinc-200 text-base shadow-sm focus-visible:ring-1 focus-visible:ring-zinc-900 focus-visible:border-zinc-900 transition-colors"
                           placeholder="Enter monthly base salary"
                           onChange={(e) =>
                             field.onChange(
@@ -218,11 +218,11 @@ const PostJobForm = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                    <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                       Job Description & Responsibilities <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <div className="border border-zinc-200 rounded-xl overflow-hidden shadow-sm bg-zinc-50/50 transition-all duration-200">
+                      <div className="border border-zinc-200 rounded-lg overflow-hidden shadow-sm bg-white transition-colors">
                         <RichTextEditor
                           value={field.value}
                           onChange={(value) => {
@@ -242,11 +242,11 @@ const PostJobForm = () => {
                   name="jobTypeId"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                         Employment Type <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                        <div className="rounded-lg shadow-sm border border-zinc-200 bg-white focus-within:ring-1 focus-within:ring-zinc-900 focus-within:border-zinc-900 transition-colors">
                           <CustomSelect
                             onChange={field.onChange}
                             options={jobTypesOptions}
@@ -268,11 +268,11 @@ const PostJobForm = () => {
                   name="experienceLevelId"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                         Experience Level <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                        <div className="rounded-lg shadow-sm border border-zinc-200 bg-white focus-within:ring-1 focus-within:ring-zinc-900 focus-within:border-zinc-900 transition-colors">
                           <CustomSelect
                             onChange={field.onChange}
                             options={experienceLevelsOptions}
@@ -294,11 +294,11 @@ const PostJobForm = () => {
                   name="jobLocationId"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                         Job Location <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                        <div className="rounded-lg shadow-sm border border-zinc-200 bg-white focus-within:ring-1 focus-within:ring-zinc-900 focus-within:border-zinc-900 transition-colors">
                           <CustomSelect
                             onChange={field.onChange}
                             options={jobLocationsOptions}
@@ -322,11 +322,11 @@ const PostJobForm = () => {
                 name="companyId"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                    <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                       Hiring Organization / Company <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                      <div className="rounded-lg shadow-sm border border-zinc-200 bg-white focus-within:ring-1 focus-within:ring-zinc-900 focus-within:border-zinc-900 transition-colors">
                         <CustomSelect
                           imageUpload
                           onChange={field.onChange}
@@ -366,11 +366,11 @@ const PostJobForm = () => {
                   name="deadline"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                         Application Deadline <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                        <div className="rounded-lg shadow-sm border border-zinc-200 bg-white focus-within:ring-1 focus-within:ring-zinc-900 focus-within:border-zinc-900 transition-colors">
                           <DatePicker
                             onChange={field.onChange}
                             value={field.value}
@@ -387,7 +387,7 @@ const PostJobForm = () => {
                   name="currencyType"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                      <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                         Currency Type <span className="text-red-500">*</span>
                       </FormLabel>
                       <Select
@@ -396,14 +396,14 @@ const PostJobForm = () => {
                         disabled={isJobPending}
                       >
                         <FormControl>
-                          <SelectTrigger className="h-12 px-4 rounded-xl border-zinc-200 bg-zinc-50/50 focus:ring-2 focus:ring-zinc-900 text-base">
+                          <SelectTrigger className="h-11 px-4 rounded-lg bg-white border border-zinc-200 text-base shadow-sm focus:ring-1 focus:ring-zinc-900 focus:border-zinc-900 transition-colors">
                             <SelectValue placeholder="Select currency" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="rounded-xl border-zinc-200 shadow-lg">
+                        <SelectContent className="rounded-lg border-zinc-200 shadow-lg bg-white">
                           {["USD", "EUR", "GBP", "NGN", "INR"].map(
                             (currency) => (
-                              <SelectItem key={currency} value={currency} className="rounded-lg py-2 cursor-pointer">
+                              <SelectItem key={currency} value={currency} className="rounded-md py-2 cursor-pointer hover:bg-zinc-100">
                                 {currency}
                               </SelectItem>
                             )
@@ -421,11 +421,11 @@ const PostJobForm = () => {
                 name="skillIds"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel className="text-sm font-bold text-zinc-800 tracking-wide">
+                    <FormLabel className="text-sm font-semibold text-zinc-800 tracking-tight">
                       Required Skill Sets <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <div className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-zinc-50/50">
+                      <div className="rounded-lg shadow-sm border border-zinc-200 bg-white focus-within:ring-1 focus-within:ring-zinc-900 focus-within:border-zinc-900 transition-colors">
                         <CustomSelect
                           onChange={field.onChange}
                           options={skillsOptions}
@@ -450,11 +450,11 @@ const PostJobForm = () => {
               <div className="pt-4">
                 <Button
                   type="submit"
-                  className="w-full h-14 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-lg shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] rounded-xl flex items-center justify-center gap-3"
+                  className="w-full h-12 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-base shadow-sm transition-all rounded-lg flex items-center justify-center gap-2"
                   disabled={isJobPending}
                 >
                   <span>Publish Job Opportunity</span>
-                  <SendHorizonalIcon className="w-6 h-6 text-zinc-400" />
+                  <SendHorizonalIcon className="w-5 h-5 text-zinc-400" />
                 </Button>
               </div>
             </form>

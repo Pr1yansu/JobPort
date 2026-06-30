@@ -86,7 +86,7 @@ export default function SidebarNavigation({ user }: { user: any }) {
   }
 
   return (
-    <SidebarMenu className="h-full space-y-1.5 px-2 py-2">
+    <SidebarMenu className="h-full space-y-2 px-3 py-4">
       {items.map((item) => {
         const isActive =
           pathname === item.url ||
@@ -99,8 +99,8 @@ export default function SidebarNavigation({ user }: { user: any }) {
               isActive={isActive}
               className={
                 isActive
-                  ? "bg-zinc-900 text-white font-bold shadow-lg hover:bg-zinc-800 hover:text-white rounded-xl py-5 px-4 transition-all duration-200 flex items-center gap-3.5 scale-[1.02]"
-                  : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 font-medium rounded-xl py-5 px-4 transition-all duration-200 flex items-center gap-3.5"
+                  ? "!bg-blue-600/10 !text-blue-600 !font-semibold !shadow-none !rounded-xl py-3 px-4 transition-all flex items-center gap-3.5 border-l-4 border-blue-600"
+                  : "text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-900 font-medium rounded-xl py-3 px-4 transition-all flex items-center gap-3.5 border-l-4 border-transparent hover:border-zinc-300"
               }
             >
               {item.title === "Resume" ? (
@@ -124,8 +124,8 @@ export default function SidebarNavigation({ user }: { user: any }) {
       })}
       <SidebarMenuItem>
         <LogoutBtn asChild>
-          <div className="flex text-sm px-4 py-3.5 gap-3.5 items-center text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 font-medium w-full rounded-xl cursor-pointer transition-all duration-200 mt-2">
-            <LogOut className="size-5 shrink-0" />
+          <div className="flex text-sm px-4 py-3 gap-3.5 items-center text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-900 font-medium w-full rounded-xl cursor-pointer transition-all duration-200 mt-4 border border-zinc-200/50 shadow-sm hover:shadow-md">
+            <LogOut className="size-5 shrink-0 text-zinc-400" />
             <span className="tracking-wide">Logout</span>
           </div>
         </LogoutBtn>

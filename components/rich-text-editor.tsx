@@ -25,7 +25,7 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
     editorProps: {
       attributes: {
         class:
-          "rounded-md border min-h-[150px] border-input bg-background focus:ring-offset-2 disabled:cursor-not-allows disabled:opacity-50 p-2",
+          "min-h-[150px] bg-white disabled:cursor-not-allowed disabled:opacity-50 p-4 outline-none focus:outline-none prose prose-zinc max-w-none prose-sm",
       },
     },
     onUpdate({ editor }) {

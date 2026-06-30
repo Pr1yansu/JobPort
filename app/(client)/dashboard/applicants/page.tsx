@@ -169,23 +169,23 @@ const ApplicantsPage = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Main Content */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex gap-6 mt-4">
         {/* Applicants List */}
-        <div className="w-1/2 bg-white border-r border-gray-200 pr-6">
-          <div className="py-6 border-b border-gray-200">
+        <div className="w-[45%] flex flex-col pr-2">
+          <div className="pb-4 border-b border-zinc-200/60">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">
                 Applicants
               </h2>
             </div>
 
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <div className="relative mt-2">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 w-4 h-4" />
               <Input
-                placeholder="Search applicants..."
+                placeholder="Search applicants by name, email, or role..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 rounded-xl bg-zinc-50 border-zinc-200/60 h-11"
               />
             </div>
           </div>
@@ -217,56 +217,52 @@ const ApplicantsPage = () => {
                   const { icon: StatusIcon, color } = statusConfig[status];
 
                   return (
-                    <div
+                    <button
                       key={applicant.id}
-                      className={`p-6 cursor-pointer hover:bg-gray-50 ${
-                        selectedApplicant?.id === applicant.id
-                          ? "bg-blue-50 border-r-2 border-blue-500"
-                          : ""
-                      }`}
                       onClick={() => setSelectedApplicant(applicant)}
+                      className={cn(
+                        "w-full text-left p-4 rounded-2xl transition-all duration-200 border border-transparent flex items-start space-x-4",
+                        selectedApplicant?.id === applicant.id
+                          ? "bg-blue-600/5 border-blue-600/20 shadow-sm ring-1 ring-blue-600/10"
+                          : "hover:bg-zinc-50 hover:border-zinc-200/50 hover:shadow-sm"
+                      )}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start space-x-3">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage
-                              src={applicant.avatar || "/placeholder.svg"}
-                              alt={applicant.name || "Applicant"}
-                            />
-                            <AvatarFallback>
-                              {applicant.name
-                                ?.split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {applicant.name}
-                            </p>
-                            <p className="text-sm text-gray-500 truncate">
-                              {applicant.email}
-                            </p>
-                            <p className="text-sm text-gray-500 mt-1">
-                              Applied for {applicant.jobTitle}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end space-y-2">
-                          <Badge className={cn(color)}>
-                            <StatusIcon className="w-3 h-3 mr-1" />
-                            {status}
+                      <Avatar className="w-12 h-12 ring-2 ring-white shadow-sm">
+                        <AvatarImage src={applicant.avatar || ""} />
+                        <AvatarFallback className="bg-zinc-100 text-zinc-600 font-bold">
+                          {applicant.name
+                            ?.split(" ")
+                            .map((n: string) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-bold text-zinc-900 truncate">
+                            {applicant.name}
+                          </h3>
+                          <Badge
+                            variant="secondary"
+                            className={cn(
+                              "text-[10px] font-black uppercase tracking-wider px-2 py-0.5",
+                              statusConfig[getSafeStatus(applicant.status)].color
+                            )}
+                          >
+                            <StatusIcon className="w-3 h-3 mr-1 inline" />
+                            {applicant.status || "PENDING"}
                           </Badge>
-                          <span className="text-xs text-gray-500">
-                            {applicant.appliedDate &&
-                              formatDate(
-                                new Date(applicant.appliedDate),
-                                "MMMM dd, yyyy"
-                              )}
-                          </span>
                         </div>
+                        <p className="text-sm font-medium text-zinc-500 truncate mt-0.5">
+                          {applicant.email}
+                        </p>
+                        <p className="text-xs text-zinc-400 mt-1.5 flex items-center gap-1.5">
+                          <span className="bg-zinc-100 px-2 py-0.5 rounded-md text-zinc-600 font-semibold">{applicant.jobTitle}</span>
+                          <span>•</span>
+                          <span>{applicant.appliedDate ? formatDate(new Date(applicant.appliedDate), "MMM dd, yyyy") : ""}</span>
+                        </p>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -275,12 +271,14 @@ const ApplicantsPage = () => {
         </div>
 
         {/* Applicant Details */}
-        {selectedApplicant && (
-          <div className="flex-1 bg-white">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <Avatar className="w-16 h-16">
+        <div className="w-[55%] flex flex-col h-full pl-2">
+          {selectedApplicant ? (
+            <div className="flex-1 overflow-y-auto pr-4 pb-8 space-y-6">
+              {/* Header Card */}
+              <div className="bg-white rounded-3xl p-8 border border-zinc-200/60 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-zinc-100 to-zinc-50"></div>
+                <div className="relative flex items-end gap-6 pt-12">
+                  <Avatar className="w-24 h-24 border-4 border-white shadow-md ring-1 ring-zinc-200/50">
                     <AvatarImage
                       src={selectedApplicant.avatar || "/placeholder.svg"}
                       alt={selectedApplicant.name || "Applicant"}
@@ -336,9 +334,7 @@ const ApplicantsPage = () => {
                   </DropdownMenu>
                 </div>
               </div>
-            </div>
 
-            <div className="p-6 space-y-6">
               {/* Status */}
               <Card>
                 <CardHeader>
@@ -458,8 +454,8 @@ const ApplicantsPage = () => {
                 </Button>
               </div>
             </div>
-          </div>
-        )}
+          ) : null}
+        </div>
       </div>
     </div>
   );

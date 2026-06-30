@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/schema/auth";
 import Link from "next/link";
-import { useLogin } from "@/features/auth/api/use-login";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { DEFAULT_ROUTE } from "@/routes";
 import {
@@ -28,10 +28,12 @@ import {
   DrawerFooter,
   DrawerClose,
 } from "@/components/ui/drawer";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { mutate, isPending } = useLogin();
+  const [isPending, setIsPending] = useState(false);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -40,12 +42,27 @@ export default function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    mutate(values, {
-      onSuccess: () => {
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    setIsPending(true);
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
+
+      if (result?.error) {
+        toast.error("Invalid credentials or user not found");
+      } else {
+        toast.success("User logged in successfully");
         router.push(DEFAULT_ROUTE);
-      },
-    });
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Failed to log in");
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (

@@ -7,6 +7,7 @@ import { users } from "@/db/users-schema";
 import { eq } from "drizzle-orm/expressions";
 import { auth, signIn, signOut } from "@/auth";
 import { hashPassword, comparePasswords } from "@/lib/password";
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 import { z } from "zod";
 
@@ -57,6 +58,9 @@ const app = new Hono()
         message: "User logged in successfully",
       });
     } catch (error) {
+      if (isRedirectError(error)) {
+        throw error;
+      }
       return c.json({
         success: false,
         message: "Failed to log in",

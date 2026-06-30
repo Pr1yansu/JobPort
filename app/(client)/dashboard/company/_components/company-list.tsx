@@ -57,7 +57,8 @@ const CompanyList = () => {
         {companies.map((company) => {
           return (
             <Link key={company.id} href={`/dashboard/company/${company.id}`}>
-              <Card className="bg-white rounded-lg shadow-md cursor-pointer relative">
+              <Card className="bg-white/80 backdrop-blur-md rounded-2xl border-zinc-200 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 cursor-pointer relative group overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-zinc-900 group-hover:bg-blue-600 transition-colors"></div>
                 <Button
                   size={"icon"}
                   variant={"ghost-destructive"}
@@ -69,15 +70,15 @@ const CompanyList = () => {
                 >
                   <Trash2 size={24} />
                 </Button>
-                <CardHeader>
-                  <h4 className="text-lg font-semibold capitalize flex items-center gap-2">
-                    <Building2 size={24} className="mr-1" />
+                <CardHeader className="pt-6">
+                  <h4 className="text-xl font-extrabold text-zinc-900 capitalize flex items-center gap-2">
+                    <Building2 size={24} className="mr-1 text-zinc-400" />
                     {company.name}
                   </h4>
                   {company.email && (
-                    <div className="flex items-center gap-1">
-                      <AtSign size={16} className="mr-1" />
-                      <p className="text-muted-foreground  w-20 overflow-hidden text-ellipsis text-xs">
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <AtSign size={14} className="text-zinc-400" />
+                      <p className="text-zinc-500 font-medium w-48 overflow-hidden text-ellipsis text-sm truncate">
                         {company.email}
                       </p>
                     </div>

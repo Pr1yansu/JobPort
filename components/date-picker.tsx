@@ -25,13 +25,13 @@ export function DatePicker({ onChange, value, disabled }: DatePickerProps) {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant="ghost"
           className={cn(
-            "w-full justify-start text-left font-normal",
-            !value && "text-muted-foreground"
+            "w-full justify-start text-left font-normal h-11 px-4 hover:bg-transparent rounded-lg",
+            !value ? "text-zinc-500" : "text-zinc-900 font-medium"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarIcon className="mr-2 h-4 w-4 text-zinc-400" />
           {value ? (
             format(new Date(value), "MMM dd, yyyy")
           ) : (

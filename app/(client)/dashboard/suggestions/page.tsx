@@ -24,15 +24,15 @@ const AiSuggestion = async () => {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Job Swipe</h1>
-        <p className="text-gray-600">
-          Swipe right to save jobs you're interested in
+    <div className="flex flex-col h-full bg-zinc-50/30 rounded-2xl border border-zinc-200/60 p-6">
+      <div className="mb-8 text-center space-y-2">
+        <h1 className="text-3xl font-black text-zinc-900 tracking-tighter">AI Job Match</h1>
+        <p className="text-zinc-500 font-medium">
+          Swipe right to save jobs, left to pass. Our AI learns your preferences.
         </p>
       </div>
       <JobMatchCards />
-    </main>
+    </div>
   );
 };
 

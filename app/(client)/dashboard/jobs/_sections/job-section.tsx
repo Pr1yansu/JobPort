@@ -94,6 +94,28 @@ const JobSection = () => {
     );
   }
 
+  if (!data?.jobs || data.jobs.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-zinc-50/50 border border-zinc-200/60 rounded-2xl border-dashed">
+        <div className="bg-white p-6 rounded-full shadow-sm border border-zinc-100 mb-6">
+          <svg className="w-12 h-12 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">No jobs posted yet</h3>
+        <p className="text-zinc-500 mt-2 text-center max-w-md">
+          You haven't posted any job requisitions. Create your first job posting to start receiving applications.
+        </p>
+        <button 
+          onClick={() => router.push("/dashboard/post-job")}
+          className="mt-8 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-semibold shadow-sm transition-all hover:shadow focus:ring-2 focus:ring-zinc-900/50 outline-none"
+        >
+          Post a Job Now
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full gap-6">
       <motion.div
